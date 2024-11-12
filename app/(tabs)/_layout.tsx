@@ -54,13 +54,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
         }}
       />
-      <Tabs.Screen
-        name="create"
-        options={{
-          title: 'Create a post',
-          tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
-        }}
-      />
     </Tabs>
   );
 }
