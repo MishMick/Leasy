@@ -11,13 +11,25 @@ import {
 
 const screenWidth = Dimensions.get('window').width;
 
-const Card = ({ images, title, description, key, link }) => {
-  const renderImage = ({ item }) => (
+// Define props using an interface
+interface CardProps{
+  images: ImageItem[];
+  title: string;
+  description: string;
+  details: string;
+}
+
+interface ImageItem{
+  uri: string;
+}
+
+const Card: React.FC<CardProps> = ({images, title, description, details}) => {
+  const renderImage = ({ item }: { item: ImageItem }) => (
     <Image source={{ uri: item.uri }} style={styles.image} />
   );
 
   return (
-    <Link href={link} style={styles.card}>
+    <Link href={{ pathname: '/details', params: { details: details } }} style={styles.card}>
       <FlatList
         data={images}
         renderItem={renderImage}
