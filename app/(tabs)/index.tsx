@@ -10,7 +10,7 @@ export default function TabTwoScreen() {
 
   // Function to fetch data from the local API server
   const fetchData = async () => {
-    setLoading(true);
+    //setLoading(true);
     try {
       const response = await axios.get('http://localhost:3000/api/listings');
       setData(response.data.result);
@@ -22,7 +22,11 @@ export default function TabTwoScreen() {
   };
 
   useEffect(() => {
-    fetchData();
+    setLoading(true);
+
+    setTimeout(() => {
+      fetchData();
+    }, 3000)
   }, []);
 
   return (
@@ -43,7 +47,6 @@ export default function TabTwoScreen() {
       ) : (
         <Text>No data available</Text>
       )}
-      <Button title="Fetch Data Again" onPress={fetchData} />
     </View>
   );
 }
