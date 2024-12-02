@@ -3,13 +3,13 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from "expo-router";
 
 const Details = () => {
-  const { details } = useLocalSearchParams();
+  const { id } = useLocalSearchParams();
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Details Page</Text>
       <Text style={styles.description}>
-        Displaying details for item:  {details}
+        Displaying details for item:  {id}
       </Text>
     </View>
   );

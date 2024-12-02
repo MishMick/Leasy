@@ -48,7 +48,7 @@ export default function TabTwoScreen() {
           images={card.images}
           title={card.title}
           description={card.description}
-          details={card.details} />
+          id={card.id} />
       ))}
     </ScrollView>
   );
