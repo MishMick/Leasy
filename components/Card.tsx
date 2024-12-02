@@ -11,19 +11,8 @@ import {
 
 const screenWidth = Dimensions.get('window').width;
 
-// Define props using an interface
-interface CardProps{
-  id: number;
-  images: ImageItem[];
-  title: string;
-  description: string;
-}
 
-interface ImageItem{
-  uri: string;
-}
-
-const Card: React.FC<CardProps> = ({images, title, description, id}) => {
+const Card: React.FC<Listing> = ({images, title, description, id}) => {
   const renderImage = ({ item }: { item: ImageItem }) => (
     <Image source={{ uri: item.uri }} style={styles.image} />
   );
