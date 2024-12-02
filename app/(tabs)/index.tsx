@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
 import Card from '@/components/Card'; // adjust the path as necessary
 import axios from 'axios';
 
@@ -24,7 +24,7 @@ export default function TabTwoScreen() {
   useEffect(() => {
     setLoading(true);
 
-    setTimeout(() => {
+    setTimeout(() => {  // TODO: remove once tested
       fetchData();
     }, 3000)
   }, []);
@@ -32,8 +32,8 @@ export default function TabTwoScreen() {
   return (
     <View>
       {loading ? (
-        <Text>Loading...</Text>
-      ) : data ? (
+        <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
+      ) : data.length > 0 ? (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           {data.map((card) => (
             <Card
@@ -54,5 +54,8 @@ export default function TabTwoScreen() {
 const styles = StyleSheet.create({
   scrollContainer: {
     padding: 10, // Add padding around the scroll container
+  },
+  loader: {
+    marginTop: 20, // Add some space above the spinner
   },
 });
