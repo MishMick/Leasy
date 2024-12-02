@@ -11,13 +11,13 @@ import {
 
 const screenWidth = Dimensions.get('window').width;
 
-const Card = ({ images, title, description, id }) => {
+const Card = ({ images, title, description, key, link }) => {
   const renderImage = ({ item }) => (
     <Image source={{ uri: item.uri }} style={styles.image} />
   );
 
   return (
-    <Link href={{ pathname: '/details', params: { id } }} style={styles.card}>
+    <Link href={link} style={styles.card}>
       <FlatList
         data={images}
         renderItem={renderImage}
