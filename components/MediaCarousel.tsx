@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions, Text, Image } from 'react-native';
-import Carousel from 'react-native-snap-carousel';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import Swiper from 'react-native-swiper';
 
@@ -11,12 +10,31 @@ interface MediaCarouselProps {
 }
 
 const MediaCarousel = ({ mediaData }: MediaCarouselProps) => {
-  const renderItem = (item: MediaItem, index: number ) => {
+    const [activeIndex, setActiveIndex] = useState<number>(0); // Track active slide index
+    const [player, setPlayer] = useState<any>(null); // Store the player instance
 
-    const player = useVideoPlayer(item.uri, player => {
-        player.loop = true;
+    // Function to start or stop video playback based on active index
+    const handleSwipe = (index: number) => {
+        setActiveIndex(index);
+
+        // Stop video when the slide changes
+        if (player && mediaData[index].type === 'video') {
         player.play();
-    });
+        } else if (player) {
+        player.pause(); // Pause video if it's not the active video slide
+        }
+    };
+
+    const renderItem = (item: MediaItem, index: number ) => {
+
+        const playerInstance = useVideoPlayer(item.uri, (player) => {
+            player.loop = true;
+            player.play();
+          });
+
+          useEffect(() => {
+            setPlayer(playerInstance); // Set player instance when it's created
+          }, [playerInstance]);
 
     return (
       <View style={styles.carouselItem} key={index}>
@@ -33,7 +51,7 @@ const MediaCarousel = ({ mediaData }: MediaCarouselProps) => {
 
   return (
     <View>
-        <Swiper style={styles.wrapper} showsButtons loop>
+        <Swiper style={styles.wrapper} showsButtons onIndexChanged={handleSwipe} >
             {mediaData.map((item, index) => (
                 renderItem(item, index)
             ))}
