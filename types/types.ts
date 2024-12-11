@@ -3,13 +3,14 @@
 // Interface for a single listing
 interface Listing{
     id: number;
-    images: ImageItem[];
+    media: MediaItem[];
     title: string;
     description: string;
 }
   
-interface ImageItem{
+interface MediaItem{
     uri: string;
+    type: string;
 }
 
   

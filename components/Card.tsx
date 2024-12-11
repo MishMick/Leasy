@@ -12,15 +12,16 @@ import {
 const screenWidth = Dimensions.get('window').width;
 
 
-const Card: React.FC<Listing> = ({images, title, description, id}) => {
-  const renderImage = ({ item }: { item: ImageItem }) => (
-    <Image source={{ uri: item.uri }} style={styles.image} />
+const Card: React.FC<Listing> = ({media, title, description, id}) => {
+  const renderImage = ({ item }: { item: MediaItem }) => (
+    item.type === 'image' ? 
+    <Image source={{ uri: item.uri }} style={styles.image} /> : null  // TODO: maybe change to play video as well
   );
 
   return (
     <Link href={{ pathname: '/details', params: { id: id } }} style={styles.card}>
       <FlatList
-        data={images}
+        data={media}
         renderItem={renderImage}
         keyExtractor={(item, index) => index.toString()}
         horizontal

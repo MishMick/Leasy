@@ -38,7 +38,7 @@ export default function TabTwoScreen() {
           {data.map((card) => (
             <Card
               key={card.id}
-              images={card.images}
+              media={card.media}
               title={card.title}
               description={card.description}
               id={card.id} />
