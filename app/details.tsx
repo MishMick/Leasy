@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams } from "expo-router";
 import axios from 'axios';
 import { useVideoPlayer, VideoView } from 'expo-video';
+import MediaCarousel from '@/components/MediaCarousel';
 
 const Details = () => {
   const [data, setData] = useState<Listing | null>(null);
@@ -29,28 +30,12 @@ const Details = () => {
     }
   }, [id]); // Depend on `id`, so it runs when `id` changes.
 
-  let videoSource = '';
-  const video = data?.media.find(item => item.type === "video");
-
-  if (video) {
-    videoSource = video.uri
-  } 
-
-  const player = useVideoPlayer(videoSource, player => {
-    player.loop = true;
-    player.play();
-  });
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Details Page</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-        <>
-          {data && <Text>{JSON.stringify(data)}</Text>}
-          <VideoView style={styles.video} player={player} allowsFullscreen allowsPictureInPicture />
-        </>
+          <MediaCarousel mediaData={data?.media || []} />
       )}
     </View>
   );
