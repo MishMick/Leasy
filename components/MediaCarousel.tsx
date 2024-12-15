@@ -1,80 +1,154 @@
-import React from 'react';
-import { View, StyleSheet, Dimensions, Text, Image } from 'react-native';
-import Carousel from 'react-native-snap-carousel';
-import { useVideoPlayer, VideoPlayer, VideoView } from 'expo-video';
-import Swiper from 'react-native-swiper';
-
-const { width, height } = Dimensions.get('window');
+import React, { useState, useRef } from 'react';
+import { 
+  View, 
+  FlatList, 
+  Image, 
+  Dimensions, 
+  StyleSheet,
+  Animated
+} from 'react-native';
+import { useVideoPlayer, VideoView } from 'expo-video';
 
 interface MediaCarouselProps {
-    mediaData: MediaItem[];
+  mediaData: MediaItem[];
 }
 
-const MediaCarousel = ({ mediaData }: MediaCarouselProps) => {
+const { width: screenWidth } = Dimensions.get('window');
+const ITEM_WIDTH = screenWidth;
+const CAROUSEL_HEIGHT = 350;
 
-    // Reorder mediaData to ensure video appears first
-    const reorderedMediaData = [...mediaData];
-    const videoIndex = reorderedMediaData.findIndex(item => item.type === 'video');
-    if (videoIndex !== -1) {
-        // Move the video to the first position
-        const videoItem = reorderedMediaData.splice(videoIndex, 1)[0];
-        reorderedMediaData.unshift(videoItem);
-    }
+const MediaCarousel: React.FC<MediaCarouselProps> = ({ mediaData }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const flatListRef = useRef<FlatList>(null);
+  const scrollX = useRef(new Animated.Value(0)).current;
 
-    const renderItem = (item: MediaItem, index: number ) => {
-
-        const player = useVideoPlayer(item.uri, player => {
+  // Create video players at component level
+  const videoPlayers = mediaData.map(item => {
+    if (item.type === 'video') {
+        return useVideoPlayer(item.uri, player => {
             player.loop = true;
             player.play();
         });
+    }
+    return null;
+    });
 
+    const renderItem = ({ item, index }: { item: MediaItem; index: number }) => {
         return (
-        <View style={styles.carouselItem} key={index}>
-            {item.type === 'image' ? (
-            <Image source={{ uri: item.uri }} style={styles.media} />
-            ) : item.type === 'video' && player ? (
-                <VideoView style={styles.media} player={player} allowsFullscreen allowsPictureInPicture />
-            ) : (
-            <Text>Invalid media type</Text>
-            )}
-        </View>
+            <View style={styles.slideContainer}>
+                {item.type === 'image' ? (
+                    <Image
+                        source={{ uri: item.uri }}
+                        style={styles.image}
+                        resizeMode="cover"
+                    />
+                ) : item.type === 'video' && videoPlayers[index] ? (
+                    <VideoView 
+                        style={styles.video} 
+                        player={videoPlayers[index]}
+                        allowsFullscreen
+                        allowsPictureInPicture
+                    />
+                ) : null}
+            </View>
         );
     };
 
-    return (
-        <View>
-            <Swiper 
-                style={styles.wrapper} 
-                showsButtons 
-                loop
-            >
-                {reorderedMediaData.map((item, index) => (
-                    renderItem(item, index)
-                ))}
-            </Swiper>
-        </View>
-    );
+  const renderDotIndicator = () => (
+      <View style={styles.dotContainer}>
+          {mediaData.map((_, index) => (
+              <Animated.View
+                  key={index}
+                  style={[
+                      styles.dot,
+                      {
+                          width: scrollX.interpolate({
+                              inputRange: [
+                                  (index - 1) * ITEM_WIDTH,
+                                  index * ITEM_WIDTH,
+                                  (index + 1) * ITEM_WIDTH,
+                              ],
+                              outputRange: [8, 16, 8],
+                              extrapolate: 'clamp',
+                          }),
+                          opacity: scrollX.interpolate({
+                              inputRange: [
+                                  (index - 1) * ITEM_WIDTH,
+                                  index * ITEM_WIDTH,
+                                  (index + 1) * ITEM_WIDTH,
+                              ],
+                              outputRange: [0.5, 1, 0.5],
+                              extrapolate: 'clamp',
+                          }),
+                      },
+                  ]}
+              />
+          ))}
+      </View>
+  );
+
+  return (
+      <View style={styles.container}>
+          <FlatList
+              ref={flatListRef}
+              data={mediaData}
+              renderItem={renderItem}
+              horizontal
+              pagingEnabled
+              snapToInterval={ITEM_WIDTH}
+              decelerationRate="fast"
+              showsHorizontalScrollIndicator={false}
+              bounces={false}
+              onScroll={Animated.event(
+                  [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                  { useNativeDriver: false }
+              )}
+              onMomentumScrollEnd={(event) => {
+                  const newIndex = Math.round(
+                      event.nativeEvent.contentOffset.x / ITEM_WIDTH
+                  );
+                  setActiveIndex(newIndex);
+              }}
+              getItemLayout={(_, index) => ({
+                  length: ITEM_WIDTH,
+                  offset: ITEM_WIDTH * index,
+                  index,
+              })}
+          />
+          {renderDotIndicator()}
+      </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 20,
-    },
-    wrapper: {
-        height: 200,
-    },
-    carouselItem: {
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    media: {
-      width: width - 40, // Adjust width as needed
-      height: 200, // Set a fixed height for both images and videos
-      backgroundColor: 'black',
-    }
-})
+  container: {
+      height: CAROUSEL_HEIGHT,
+  },
+  slideContainer: {
+      width: ITEM_WIDTH,
+      height: CAROUSEL_HEIGHT,
+  },
+  image: {
+      width: '100%',
+      height: '100%',
+  },
+  video: {
+      width: '100%',
+      height: '100%',
+  },
+  dotContainer: {
+      flexDirection: 'row',
+      position: 'absolute',
+      bottom: 20,
+      alignSelf: 'center',
+      gap: 8,
+  },
+  dot: {
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: '#fff',
+      marginHorizontal: 2,
+  }
+});
 
 export default MediaCarousel;
