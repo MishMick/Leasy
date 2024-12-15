@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import React from 'react';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -22,10 +23,12 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
+  const FONTS = {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
-  });
+  } as const;
+
+  const [loaded, error] = useFonts(FONTS);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -45,16 +48,24 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
-function RootLayoutNav() {
+const RootLayoutNav: React.FC = React.memo(() => {
   const colorScheme = useColorScheme();
+
+  const SCREEN_CONFIG = {
+    // Define your screen configurations here
+    // For example:
+    '(tabs)': { headerShown: false },
+    'filter': { presentation: 'modal' },
+    'details': { headerShown: true }
+  } as const;
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="filter" options={{ presentation: 'modal' }} />
-        <Stack.Screen name="details" options={{ headerShown: true }} />
+        {Object.entries(SCREEN_CONFIG).map(([name, options]) => (
+          <Stack.Screen key={name} name={name} options={options} />
+        ))}
       </Stack>
     </ThemeProvider>
   );
-}
+});
