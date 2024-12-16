@@ -1,9 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
-import Card from '@/components/Card'; // adjust the path as necessary
-import axios from 'axios';
+// server/server.js
+const express = require('express');
+const cors = require('cors');
+const app = express();
+const port = 3000;
 
-const listings = [
+// Middleware
+app.use(cors()); // Allow cross-origin requests from React Native
+app.use(express.json()); // Parse JSON bodies
+
+listings = [
   {
     id: 1,
     media: [{ 
@@ -80,60 +85,27 @@ const listings = [
     description: 'This is the fifth card description.',
   },
 ]
+// Sample API endpoint
+app.get('/api/listings', (req, res) => {
+  res.json({
+    result: listings,
+    success: true,
+  });
+});
 
-export default function TabTwoScreen() {
-  const [data, setData] = useState<Listing[]>([]);
-  const [loading, setLoading] = useState(false);
+// Sample API endpoint
+app.get('/api/listings/:id', (req, res) => {
+  const itemId = req.params.id;
+  const item = listings.find(item => item.id === parseInt(itemId));
 
-  // Function to fetch data from the local API server
-  const fetchData = async () => {
-    //setLoading(true);
-    try {
-      const response = await axios.get('http://localhost:3000/api/listings');
-      setData(response.data.result);
-    } catch (error) {
-      console.error('Error fetching data', error);
-      setData(listings)
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (item) {
+    res.json(item);
+  } else {
+    res.status(404).json({ error: 'Item not found' });
+  }
+});
 
-  useEffect(() => {
-    setLoading(true);
-
-    setTimeout(() => {  // TODO: remove once tested
-      fetchData();
-    }, 3000)
-  }, []);
-
-  return (
-    <View>
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
-      ) : data.length > 0 ? (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          {data.map((card) => (
-            <Card
-              key={card.id}
-              media={card.media}
-              title={card.title}
-              description={card.description}
-              id={card.id} />
-          ))}
-        </ScrollView>
-      ) : (
-        <Text>No data available</Text>
-      )}
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  scrollContainer: {
-    padding: 10, // Add padding around the scroll container
-  },
-  loader: {
-    marginTop: 20, // Add some space above the spinner
-  },
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
 });
