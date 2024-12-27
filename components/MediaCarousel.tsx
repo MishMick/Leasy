@@ -9,70 +9,70 @@ interface MediaCarouselProps {
 const { width: screenWidth } = Dimensions.get('window');
 const ITEM_WIDTH = screenWidth;
 const CAROUSEL_HEIGHT = 350;
+const DOT_SIZE_ACTIVE = 16;
+const DOT_SIZE_INACTIVE = 8;
 
 const MediaCarousel: React.FC<MediaCarouselProps> = ({ mediaData }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
-
-  // Create video players at component level
-  const videoPlayers = mediaData.map(item => {
-    if (item.type === 'video') {
-      return useVideoPlayer(item.uri, player => {
-        player.loop = true;
-        player.play();
-      });
-    }
-    return null;
+  const videoPlayer = useVideoPlayer(mediaData[activeIndex]?.uri, player => {
+    player.loop = true;
+    player.play();
   });
 
-  const renderItem = ({ item, index }: { item: MediaItem; index: number }) => {
-    return (
-      <View style={styles.slideContainer}>
-        {item.type === 'image' ? (
-          <Image source={{ uri: item.uri }} style={styles.image} resizeMode="cover" />
-        ) : item.type === 'video' && videoPlayers[index] ? (
-          <VideoView
-            style={styles.video}
-            player={videoPlayers[index]}
-            allowsFullscreen
-            allowsPictureInPicture
-          />
-        ) : null}
-      </View>
-    );
-  };
+
+  const renderItem = ({ item, index }: { item: MediaItem; index: number }) => (
+    <View style={styles.slideContainer}>
+      {item.type === 'image' ? (
+        <Image source={{ uri: item.uri }} style={styles.image} resizeMode="cover" />
+      ) : (
+        <VideoView
+          style={styles.video}
+          player={videoPlayer}
+          allowsFullscreen
+          allowsPictureInPicture
+        />
+      )}
+    </View>
+  );
 
   const renderDotIndicator = () => (
     <View style={styles.dotContainer}>
-      {mediaData.map((_, index) => (
-        <Animated.View
-          key={index}
-          style={[
-            styles.dot,
-            {
-              width: scrollX.interpolate({
-                inputRange: [
-                  (index - 1) * ITEM_WIDTH,
-                  index * ITEM_WIDTH,
-                  (index + 1) * ITEM_WIDTH,
-                ],
-                outputRange: [8, 16, 8],
-                extrapolate: 'clamp',
-              }),
-              opacity: scrollX.interpolate({
-                inputRange: [
-                  (index - 1) * ITEM_WIDTH,
-                  index * ITEM_WIDTH,
-                  (index + 1) * ITEM_WIDTH,
-                ],
-                outputRange: [0.5, 1, 0.5],
-                extrapolate: 'clamp',
-              }),
-            },
-          ]}
-        />
-      ))}
+      {mediaData.map((_, index) => {
+        const dotWidth = scrollX.interpolate({
+          inputRange: [
+            (index - 1) * ITEM_WIDTH,
+            index * ITEM_WIDTH,
+            (index + 1) * ITEM_WIDTH,
+          ],
+          outputRange: [8, 16, 8],
+          extrapolate: 'clamp',
+        });
+
+        const dotOpacity = scrollX.interpolate({
+          inputRange: [
+            (index - 1) * ITEM_WIDTH,
+            index * ITEM_WIDTH,
+            (index + 1) * ITEM_WIDTH,
+          ],
+          outputRange: [0.5, 1, 0.5],
+          extrapolate: 'clamp',
+        });
+
+        return (
+          <Animated.View
+            key={index}
+            style={[
+              styles.dot,
+              {
+                width: dotWidth,
+                opacity: dotOpacity,
+              },
+            ]}
+          />
+        );
+      })}
     </View>
   );
 
@@ -106,6 +106,7 @@ const MediaCarousel: React.FC<MediaCarouselProps> = ({ mediaData }) => {
   );
 };
 
+
 const styles = StyleSheet.create({
   container: {
     height: CAROUSEL_HEIGHT,
@@ -130,8 +131,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   dot: {
-    height: 8,
-    borderRadius: 4,
+    height: DOT_SIZE_INACTIVE,
+    borderRadius: DOT_SIZE_INACTIVE / 2,
     backgroundColor: '#fff',
     marginHorizontal: 2,
   },
