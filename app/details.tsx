@@ -34,7 +34,7 @@ const Details = () => {
 
       async function fetchDetails() {
         setLoading(true);
-        
+
         try {
           const data = await (await fetch(`http://localhost:3000/api/listings/${numberId}`)).json();
           setData(data);

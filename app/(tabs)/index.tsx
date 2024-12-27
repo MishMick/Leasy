@@ -107,7 +107,7 @@ export default function TabTwoScreen() {
   // Function to fetch data from the local API server
   const fetchData = async () => {
     setLoading(true);
-    
+
     try {
       const response = await fetch('http://localhost:3000/api/listings');
       const data = await response.json();

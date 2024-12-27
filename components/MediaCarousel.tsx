@@ -21,7 +21,6 @@ const MediaCarousel: React.FC<MediaCarouselProps> = ({ mediaData }) => {
     player.play();
   });
 
-
   const renderItem = ({ item, index }: { item: MediaItem; index: number }) => (
     <View style={styles.slideContainer}>
       {item.type === 'image' ? (
@@ -41,21 +40,13 @@ const MediaCarousel: React.FC<MediaCarouselProps> = ({ mediaData }) => {
     <View style={styles.dotContainer}>
       {mediaData.map((_, index) => {
         const dotWidth = scrollX.interpolate({
-          inputRange: [
-            (index - 1) * ITEM_WIDTH,
-            index * ITEM_WIDTH,
-            (index + 1) * ITEM_WIDTH,
-          ],
+          inputRange: [(index - 1) * ITEM_WIDTH, index * ITEM_WIDTH, (index + 1) * ITEM_WIDTH],
           outputRange: [8, 16, 8],
           extrapolate: 'clamp',
         });
 
         const dotOpacity = scrollX.interpolate({
-          inputRange: [
-            (index - 1) * ITEM_WIDTH,
-            index * ITEM_WIDTH,
-            (index + 1) * ITEM_WIDTH,
-          ],
+          inputRange: [(index - 1) * ITEM_WIDTH, index * ITEM_WIDTH, (index + 1) * ITEM_WIDTH],
           outputRange: [0.5, 1, 0.5],
           extrapolate: 'clamp',
         });
@@ -105,7 +96,6 @@ const MediaCarousel: React.FC<MediaCarouselProps> = ({ mediaData }) => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
