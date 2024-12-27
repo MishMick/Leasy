@@ -130,6 +130,9 @@ export default function TabTwoScreen() {
   }, []);
 
   return (
+
+
+    
     <View>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
