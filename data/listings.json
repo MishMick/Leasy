@@ -1,0 +1,193 @@
+[
+    {
+      "id": 1,
+      "media": [
+        {
+          "type": "image",
+          "uri": "https://via.placeholder.com/250/808080/FFFFFF?text=Card+1"
+        },
+        {
+          "type": "image",
+          "uri": "https://via.placeholder.com/250/808080/FFFFFF?text=Card+2"
+        },
+        {
+          "type": "video",
+          "uri": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        }
+      ],
+      "title": "Listing 1",
+      "description": "This is the first card description.",
+      "bedrooms": 2,
+      "price": 400000,
+      "bathrooms": 2,
+      "laundry": "in-unit",
+      "ac": "central AC",
+      "heat": "central heat",
+      "amenityFee": 100,
+      "securityDeposit": 1200,
+      "applicationFees": 50,
+      "squareFootage": 1200,
+      "address": "123 Main Street, New York, NY",
+      "tourOptions": ["in-person", "virtual"],
+      "includedInRent": ["water", "thrash", "wifi"],
+      "leaseType": "sublease",
+      "leaseStartDate": "2024-01-01",
+      "leaseEndDate": "2025-01-01",
+      "parking": "1 parking spot included",
+      "dishwasher": "included",
+      "microwave": "included"
+    },
+    {
+      "id": 2,
+      "media": [
+        {
+          "type": "image",
+          "uri": "https://via.placeholder.com/250/808080/FFFFFF?text=Card+2"
+        },
+        {
+          "type": "image",
+          "uri": "https://via.placeholder.com/250/808080/FFFFFF?text=Card+3"
+        },
+        {
+          "type": "video",
+          "uri": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        }
+      ],
+      "title": "Listing 2",
+      "description": "This is the second card description.",
+      "bedrooms": 3,
+      "price": 500000,
+      "bathrooms": 2,
+      "laundry": "in-building",
+      "ac": "central AC",
+      "heat": "central heat",
+      "amenityFee": 150,
+      "securityDeposit": 1500,
+      "applicationFees": 60,
+      "squareFootage": 1400,
+      "address": "456 Oak Street, Brooklyn, NY",
+      "tourOptions": ["in-person", "virtual"],
+      "includedInRent": ["gas", "water", "wifi"],
+      "leaseType": "lease transfer",
+      "leaseStartDate": "2024-02-01",
+      "leaseEndDate": "2024-08-01",
+      "parking": "street parking available",
+      "dishwasher": "not included",
+      "microwave": "included"
+    },
+    {
+      "id": 3,
+      "media": [
+        {
+          "type": "image",
+          "uri": "https://via.placeholder.com/250/808080/FFFFFF?text=Card+3"
+        },
+        {
+          "type": "image",
+          "uri": "https://via.placeholder.com/250/808080/FFFFFF?text=Card+4"
+        },
+        {
+          "type": "video",
+          "uri": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        }
+      ],
+      "title": "Listing 3",
+      "description": "This is the third card description.",
+      "bedrooms": 1,
+      "price": 300000,
+      "bathrooms": 1,
+      "laundry": "in-unit",
+      "ac": "window AC",
+      "heat": "window heat",
+      "amenityFee": 75,
+      "securityDeposit": 1000,
+      "applicationFees": 40,
+      "squareFootage": 800,
+      "address": "789 Pine Street, Queens, NY",
+      "tourOptions": ["in-person", "virtual"],
+      "includedInRent": ["gas", "water", "thrash"],
+      "leaseType": "sublease",
+      "leaseStartDate": "2024-03-01",
+      "leaseEndDate": "2025-03-01",
+      "parking": "no parking available",
+      "dishwasher": "not included",
+      "microwave": "not included"
+    },
+    {
+      "id": 4,
+      "media": [
+        {
+          "type": "image",
+          "uri": "https://via.placeholder.com/250/808080/FFFFFF?text=Card+4"
+        },
+        {
+          "type": "image",
+          "uri": "https://via.placeholder.com/250/808080/FFFFFF?text=Card+5"
+        },
+        {
+          "type": "video",
+          "uri": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        }
+      ],
+      "title": "Listing 4",
+      "description": "This is the fourth card description.",
+      "bedrooms": 4,
+      "price": 650000,
+      "bathrooms": 3,
+      "laundry": "in-unit",
+      "ac": "central AC",
+      "heat": "central heat",
+      "amenityFee": 200,
+      "securityDeposit": 1800,
+      "applicationFees": 70,
+      "squareFootage": 2000,
+      "address": "1011 Elm Street, Manhattan, NY",
+      "tourOptions": ["in-person", "virtual"],
+      "includedInRent": ["gas", "water", "wifi"],
+      "leaseType": "lease transfer",
+      "leaseStartDate": "2024-04-01",
+      "leaseEndDate": "2026-04-01",
+      "parking": "2 garage parking spots available",
+      "dishwasher": "included",
+      "microwave": "included"
+    },
+    {
+      "id": 5,
+      "media": [
+        {
+          "type": "image",
+          "uri": "https://via.placeholder.com/250/808080/FFFFFF?text=Card+5"
+        },
+        {
+          "type": "image",
+          "uri": "https://via.placeholder.com/250/808080/FFFFFF?text=Card+6"
+        },
+        {
+          "type": "video",
+          "uri": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        }
+      ],
+      "title": "Listing 5",
+      "description": "This is the fifth card description.",
+      "bedrooms": 2,
+      "price": 450000,
+      "bathrooms": 1,
+      "laundry": "in-building",
+      "ac": "central AC",
+      "heat": "central heat",
+      "amenityFee": 120,
+      "securityDeposit": 1300,
+      "applicationFees": 55,
+      "squareFootage": 1100,
+      "address": "2022 Birch Street, Bronx, NY",
+      "tourOptions": ["in-person", "virtual"],
+      "includedInRent": ["electricity", "water", "thrash"],
+      "leaseType": "sublease",
+      "leaseStartDate": "2024-05-01",
+      "leaseEndDate": "2024-11-01",
+      "parking": "assigned parking spot available",
+      "dishwasher": "included",
+      "microwave": "not included"
+    }
+]
+  

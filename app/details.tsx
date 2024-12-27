@@ -3,30 +3,14 @@ import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-n
 import { useLocalSearchParams } from 'expo-router';
 import MediaCarousel from '@/components/MediaCarousel';
 
+const listings = require('@/data/listings.json');
+
 const Details = () => {
   const [data, setData] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(false);
   const { id } = useLocalSearchParams();
 
-  const mockData = {
-    id: 5,
-    media: [
-      {
-        type: 'video',
-        uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-      },
-      {
-        type: 'image',
-        uri: 'https://via.placeholder.com/250/F92C00/FFFFFF?text=Card+5',
-      },
-      {
-        type: 'image',
-        uri: 'https://via.placeholder.com/250/808080/FFFFFF?text=Card+6',
-      },
-    ],
-    title: 'Listing 5',
-    description: 'This is the fifth card description.',
-  };
+  const mockData = listings[0];
 
   useEffect(() => {
     if (id) {
