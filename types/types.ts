@@ -4,8 +4,6 @@
 interface Listing {
   id: number;
   media: MediaItem[];
-  title: string;
-  description: string;
   bedrooms: number;
   price: number;
   bathrooms: number;
@@ -25,6 +23,7 @@ interface Listing {
   parking: string;
   dishwasher: string;
   microwave: string;
+  elevator: boolean;
 }
 
 interface MediaItem {
