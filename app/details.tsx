@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native';
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from 'expo-router';
 import MediaCarousel from '@/components/MediaCarousel';
 import axios from 'axios';
 
@@ -11,19 +11,23 @@ const Details = () => {
 
   const mockData = {
     id: 5,
-    media: [{
-      type: 'video',
-      uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-    },{ 
-      type: 'image',
-      uri: 'https://via.placeholder.com/250/F92C00/FFFFFF?text=Card+5' 
-    }, { 
-      type: 'image',
-      uri: 'https://via.placeholder.com/250/808080/FFFFFF?text=Card+6' 
-    }],
+    media: [
+      {
+        type: 'video',
+        uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+      },
+      {
+        type: 'image',
+        uri: 'https://via.placeholder.com/250/F92C00/FFFFFF?text=Card+5',
+      },
+      {
+        type: 'image',
+        uri: 'https://via.placeholder.com/250/808080/FFFFFF?text=Card+6',
+      },
+    ],
     title: 'Listing 5',
     description: 'This is the fifth card description.',
-  }
+  };
 
   useEffect(() => {
     if (id) {

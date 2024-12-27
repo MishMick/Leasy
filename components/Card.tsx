@@ -1,22 +1,12 @@
 import { Link } from 'expo-router';
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Image,
-  Dimensions,
-} from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, Dimensions } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 
-
-const Card: React.FC<Listing> = ({media, title, description, id}) => {
-  const renderImage = ({ item }: { item: MediaItem }) => (
-    item.type === 'image' ? 
-    <Image source={{ uri: item.uri }} style={styles.image} /> : null  // TODO: maybe change to play video as well
-  );
+const Card: React.FC<Listing> = ({ media, title, description, id }) => {
+  const renderImage = ({ item }: { item: MediaItem }) =>
+    item.type === 'image' ? <Image source={{ uri: item.uri }} style={styles.image} /> : null; // TODO: maybe change to play video as well
 
   return (
     <Link href={{ pathname: '/details', params: { id: id } }} style={styles.card}>

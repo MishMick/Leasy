@@ -55,8 +55,8 @@ const RootLayoutNav: React.FC = React.memo(() => {
     // Define your screen configurations here
     // For example:
     '(tabs)': { headerShown: false },
-    'filter': { presentation: 'modal' },
-    'details': { headerShown: true }
+    filter: { presentation: 'modal' },
+    details: { headerShown: true },
   } as const;
 
   return (
