@@ -1,6 +1,10 @@
 # General Node.js and Expo Ignored Files
 node_modules/
+.expo
 .expo/
+
+.husky/
+.idea/
 .expo-shared/
 npm-debug.log*
 yarn-debug.log*
