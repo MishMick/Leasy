@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
 import Card from '@/components/Card'; // adjust the path as necessary
-import axios from 'axios';
 
 const listings = [
   {
@@ -107,10 +106,12 @@ export default function TabTwoScreen() {
 
   // Function to fetch data from the local API server
   const fetchData = async () => {
-    //setLoading(true);
+    setLoading(true);
+    
     try {
-      const response = await axios.get('http://localhost:3000/api/listings');
-      setData(response.data.result);
+      const response = await fetch('http://localhost:3000/api/listings');
+      const data = await response.json();
+      setData(data.result);
     } catch (error) {
       console.error('Error fetching data', error);
       setData(listings);

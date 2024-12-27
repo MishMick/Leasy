@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import MediaCarousel from '@/components/MediaCarousel';
-import axios from 'axios';
 
 const Details = () => {
   const [data, setData] = useState<Listing | null>(null);
@@ -35,9 +34,10 @@ const Details = () => {
 
       async function fetchDetails() {
         setLoading(true);
+        
         try {
-          const response = await axios.get(`http://localhost:3000/api/listings/${numberId}`);
-          setData(response.data);
+          const data = await (await fetch(`http://localhost:3000/api/listings/${numberId}`)).json();
+          setData(data);
         } catch (error) {
           console.log('Using mock data');
           setData(mockData);
