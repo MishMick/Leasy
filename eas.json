@@ -1,15 +1,31 @@
 {
     "build": {
-      "ios": {
-        "workflow": "managed",
+      "development": {
         "distribution": "internal",
-        "autoIncrement": true
+        "ios": {
+          "autoIncrement": "buildNumber"
+        },
+        "android": {
+          "autoIncrement": "versionCode"
+        }
       },
-      "android": {
-        "workflow": "managed",
+      "preview": {
         "distribution": "internal",
-        "autoIncrement": true
+        "ios": {
+          "autoIncrement": "buildNumber"
+        },
+        "android": {
+          "autoIncrement": "versionCode"
+        }
+      },
+      "production": {
+        "distribution": "store",
+        "ios": {
+          "autoIncrement": "buildNumber"
+        },
+        "android": {
+          "autoIncrement": "versionCode"
+        }
       }
     }
   }
-  
