@@ -1,7 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, Switch, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const saveFilters = async (filters: any) => {
+  await AsyncStorage.setItem('savedFilters', JSON.stringify(filters));
+};
+
+const loadSavedFilters = async () => {
+  const savedFilters = await AsyncStorage.getItem('savedFilters');
+  return savedFilters ? JSON.parse(savedFilters) : null;
+};
+
+
 
 export default function FilterScreen() {
   const router = useRouter();
@@ -19,10 +31,23 @@ export default function FilterScreen() {
     }
   });
 
-  const validateSingleDigit = (value: string) => {
-    const numValue = parseInt(value);
-    return numValue >= 0 && numValue <= 9 ? numValue : filters.bedrooms;
+  // Update the apply button handler
+  const handleApplyFilters = async () => {
+    await saveFilters(filters);
+    router.back();
   };
+
+  // Load saved filters on mount
+  useEffect(() => {
+    const loadFilters = async () => {
+      const saved = await loadSavedFilters();
+      if (saved) {
+        setFilters(saved);
+      }
+    };
+    loadFilters();
+  }, []);
+
 
   const renderRangeSlider = (title, rangeKey, minLimit, maxLimit) => (
     <View style={styles.card}>
@@ -126,9 +151,7 @@ export default function FilterScreen() {
         {renderAmenitiesToggles()}
       </ScrollView>
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.applyButton} onPress={() => {
-          router.back()
-          }}>
+        <TouchableOpacity style={styles.applyButton} onPress={handleApplyFilters}>
           <Text style={styles.applyButtonText}>Apply Filters</Text>
         </TouchableOpacity>
       </View>
