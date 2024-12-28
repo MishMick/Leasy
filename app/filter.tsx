@@ -1,35 +1,301 @@
-import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TextInput,
+  Switch,
+  TouchableOpacity,
+} from 'react-native';
+import Slider from '@react-native-community/slider';
+import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// Add these imports for enhanced visuals
+import { MaterialIcons } from '@expo/vector-icons';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+const saveFilters = async (filters: any) => {
+  await AsyncStorage.setItem('savedFilters', JSON.stringify(filters));
+};
 
-export default function ModalScreen() {
+const loadSavedFilters = async () => {
+  const savedFilters = await AsyncStorage.getItem('savedFilters');
+  return savedFilters ? JSON.parse(savedFilters) : null;
+};
+
+export default function FilterScreen() {
+  const router = useRouter();
+  // Add initial state as a constant
+  const initialFilters = {
+    priceRange: 0,
+    squareFootage: 0,
+    bedrooms: 0,
+    bathrooms: 0,
+    amenities: {
+      laundry: false,
+      ac: false,
+      dishwasher: false,
+      microwave: false,
+      elevator: false,
+    },
+  };
+  const [filters, setFilters] = useState(initialFilters);
+
+  // Update the apply button handler
+  const handleApplyFilters = async () => {
+    await saveFilters(filters);
+    router.back();
+  };
+
+  // Add reset handler
+  const handleResetFilters = async () => {
+    setFilters(initialFilters);
+    await AsyncStorage.removeItem('savedFilters');
+  };
+
+  // Load saved filters on mount
+  useEffect(() => {
+    const loadFilters = async () => {
+      const saved = await loadSavedFilters();
+      if (saved) {
+        setFilters(saved);
+      }
+    };
+    loadFilters();
+  }, []);
+
+  const renderRangeSlider = (title, rangeKey, minLimit, maxLimit) => (
+    <View style={styles.card}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      <Text style={styles.rangeText}>
+        {filters[rangeKey]} {rangeKey === 'priceRange' ? '$' : 'sq ft'}
+      </Text>
+      <Slider
+        style={styles.slider}
+        minimumValue={minLimit}
+        maximumValue={maxLimit}
+        value={filters[rangeKey]}
+        minimumTrackTintColor="#2196F3"
+        maximumTrackTintColor="#E3F2FD"
+        thumbTintColor="#2196F3"
+        onValueChange={value =>
+          setFilters(prev => ({
+            ...prev,
+            [rangeKey]: Math.round(value),
+          }))
+        }
+      />
+    </View>
+  );
+
+  const renderAmenitiesToggles = () => (
+    <View style={styles.card}>
+      <Text style={styles.sectionTitle}>Amenities</Text>
+      {Object.keys(filters.amenities).map(amenity => (
+        <View key={amenity} style={styles.toggleRow}>
+          <Text style={styles.toggleLabel}>
+            {amenity.charAt(0).toUpperCase() + amenity.slice(1)}
+          </Text>
+          <Switch
+            value={filters.amenities[amenity]}
+            onValueChange={value =>
+              setFilters(prev => ({
+                ...prev,
+                amenities: {
+                  ...prev.amenities,
+                  [amenity]: value,
+                },
+              }))
+            }
+            trackColor={{ false: '#E3F2FD', true: '#90CAF9' }}
+            thumbColor={filters.amenities[amenity] ? '#2196F3' : '#f4f3f4'}
+          />
+        </View>
+      ))}
+    </View>
+  );
+
+  const renderBedroomsBathrooms = () => (
+    <View style={styles.card}>
+      <Text style={styles.sectionTitle}>Rooms</Text>
+      <View style={styles.inputRow}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Bedrooms</Text>
+          <TextInput
+            style={styles.input}
+            value={filters.bedrooms ? String(filters.bedrooms) : ''}
+            onChangeText={value =>
+              setFilters(prev => ({
+                ...prev,
+                bedrooms: value === '' ? 0 : Math.max(0, Math.min(9, parseInt(value) || 0)),
+              }))
+            }
+            keyboardType="numeric"
+            maxLength={1}
+            placeholderTextColor="#999"
+            placeholder="0"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Bathrooms</Text>
+          <TextInput
+            style={styles.input}
+            value={filters.bathrooms ? String(filters.bathrooms) : ''}
+            onChangeText={value =>
+              setFilters(prev => ({
+                ...prev,
+                bathrooms: value === '' ? 0 : Math.max(0, Math.min(9, parseInt(value) || 0)),
+              }))
+            }
+            keyboardType="numeric"
+            maxLength={1}
+            placeholderTextColor="#999"
+            placeholder="0"
+          />
+        </View>
+      </View>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Filter</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/modal.tsx" />
-
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {renderRangeSlider('Price Range', 'priceRange', 0, 10000)}
+        {renderRangeSlider('Square Footage', 'squareFootage', 0, 3000)}
+        {renderBedroomsBathrooms()}
+        {renderAmenitiesToggles()}
+      </ScrollView>
+      <View style={styles.footer}>
+        <View style={styles.footerButtons}>
+          <TouchableOpacity
+            style={[styles.button, styles.resetButton]}
+            onPress={handleResetFilters}
+          >
+            <MaterialIcons name="refresh" size={20} color="#576574" />
+            <Text style={styles.resetButtonText}>Reset</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.applyButton]}
+            onPress={handleApplyFilters}
+          >
+            <MaterialIcons name="check" size={20} color="#fff" />
+            <Text style={styles.applyButtonText}>Apply Filters</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 }
 
+// Update the styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#f8f9fa',
+  },
+  scrollView: {
+    padding: 20,
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 5,
+  },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#2c3e50',
+    marginBottom: 20,
+    letterSpacing: 0.5,
+  },
+  rangeText: {
+    fontSize: 20,
+    color: '#3498db',
+    fontWeight: '600',
+    marginBottom: 12,
+  },
+  slider: {
+    width: '100%',
+    height: 40,
+  },
+  toggleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ecf0f1',
+  },
+  toggleLabel: {
+    fontSize: 17,
+    color: '#34495e',
+    fontWeight: '500',
+  },
+  inputRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  inputContainer: {
+    width: '47%',
+  },
+  inputLabel: {
+    fontSize: 15,
+    color: '#7f8c8d',
+    marginBottom: 8,
+    fontWeight: '500',
+  },
+  input: {
+    borderWidth: 1.5,
+    borderColor: '#e0e0e0',
+    borderRadius: 12,
+    padding: 14,
+    fontSize: 16,
+    backgroundColor: '#f8f9fa',
+    color: '#2c3e50',
+  },
+  footer: {
+    padding: 20,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#ecf0f1',
+  },
+  footerButtons: {
+    flexDirection: 'row',
+    gap: 15,
+  },
+  button: {
+    flex: 1,
+    borderRadius: 12,
+    padding: 16,
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  resetButton: {
+    backgroundColor: '#f5f6fa',
+    borderWidth: 1.5,
+    borderColor: '#dcdde1',
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  applyButton: {
+    backgroundColor: '#3498db',
+  },
+  resetButtonText: {
+    color: '#576574',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 8,
+  },
+  applyButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 8,
   },
 });

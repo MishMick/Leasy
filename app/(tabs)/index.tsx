@@ -1,161 +1,133 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, ActivityIndicator, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import Card from '@/components/Card'; // adjust the path as necessary
-import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+import { MaterialIcons } from '@expo/vector-icons';
 
-const listings = [
-  {
-    id: 1,
-    media: [
-      {
-        type: 'image',
-        uri: 'https://via.placeholder.com/250/808080/FFFFFF?text=Card+1',
-      },
-      {
-        type: 'image',
-        uri: 'https://via.placeholder.com/250/808080/FFFFFF?text=Card+2',
-      },
-      {
-        type: 'video',
-        uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-      },
-    ],
-    title: 'Listing 1',
-    description: 'This is the first card description.',
-  },
-  {
-    id: 2,
-    media: [
-      {
-        type: 'image',
-        uri: 'https://via.placeholder.com/250/808080/FFFFFF?text=Card+2',
-      },
-      {
-        type: 'image',
-        uri: 'https://via.placeholder.com/250/808080/FFFFFF?text=Card+3',
-      },
-      {
-        type: 'video',
-        uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-      },
-    ],
-    title: 'Listing 2',
-    description: 'This is the second card description.',
-  },
-  {
-    id: 3,
-    media: [
-      {
-        type: 'image',
-        uri: 'https://via.placeholder.com/250/808080/FFFFFF?text=Card+3',
-      },
-      {
-        type: 'image',
-        uri: 'https://via.placeholder.com/250/808080/FFFFFF?text=Card+4',
-      },
-      {
-        type: 'video',
-        uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-      },
-    ],
-    title: 'Listing 3',
-    description: 'This is the third card description.',
-  },
-  {
-    id: 4,
-    media: [
-      {
-        type: 'image',
-        uri: 'https://via.placeholder.com/250/808080/FFFFFF?text=Card+4',
-      },
-      {
-        type: 'image',
-        uri: 'https://via.placeholder.com/250/808080/FFFFFF?text=Card+5',
-      },
-      {
-        type: 'video',
-        uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-      },
-    ],
-    title: 'Listing 4',
-    description: 'This is the fourth card description.',
-  },
-  {
-    id: 5,
-    media: [
-      {
-        type: 'image',
-        uri: 'https://via.placeholder.com/250/808080/FFFFFF?text=Card+5',
-      },
-      {
-        type: 'image',
-        uri: 'https://via.placeholder.com/250/808080/FFFFFF?text=Card+6',
-      },
-      {
-        type: 'video',
-        uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-      },
-    ],
-    title: 'Listing 5',
-    description: 'This is the fifth card description.',
-  },
-];
+const listings = require('@/data/listings.json');
 
-export default function TabTwoScreen() {
+export default function HomeScreen() {
   const [data, setData] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  // Function to fetch data from the local API server
+  const applyFilters = async (listings: Listing[]) => {
+    const savedFilters = await AsyncStorage.getItem('savedFilters');
+    if (!savedFilters) return listings;
+
+    const filters = JSON.parse(savedFilters);
+    return listings.filter(listing => {
+      return (
+        (!filters.priceRange || listing.price <= filters.priceRange) &&
+        (!filters.squareFootage || listing.squareFootage >= filters.squareFootage) &&
+        (!filters.bedrooms || listing.bedrooms >= filters.bedrooms) &&
+        (!filters.bathrooms || listing.bathrooms >= filters.bathrooms) &&
+        Object.entries(filters.amenities).every(
+          ([key, value]) =>
+            !value ||
+            (key in listing &&
+              (listing[key as keyof Listing] === true || listing[key as keyof Listing] === 'yes'))
+        )
+      );
+    });
+  };
+
   const fetchData = async () => {
-    //setLoading(true);
+    setLoading(true);
     try {
-      const response = await axios.get('http://localhost:3000/api/listings');
-      setData(response.data.result);
+      const response = await fetch('http://localhost:3000/api/listings');
+      const rawData = await response.json();
+      const filteredData = await applyFilters(rawData.result);
+      setData(filteredData);
     } catch (error) {
       console.error('Error fetching data', error);
-      setData(listings);
+      const filteredData = await applyFilters(listings);
+      setData(filteredData);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    setLoading(true);
-
-    setTimeout(() => {
-      // TODO: remove once tested
+  useFocusEffect(
+    React.useCallback(() => {
       fetchData();
-    }, 3000);
+    }, [])
+  );
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchData().then(() => setRefreshing(false));
   }, []);
 
   return (
-    <View>
+    <View style={styles.container}>
       {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
+        <ActivityIndicator size="large" color="#3498db" style={styles.loader} />
       ) : data.length > 0 ? (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          {data.map(card => (
+        <ScrollView 
+          contentContainerStyle={styles.scrollContainer}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={["#3498db"]}
+              tintColor="#3498db"
+            />
+          }
+        >
+          {data.map(listing => (
             <Card
-              key={card.id}
-              media={card.media}
-              title={card.title}
-              description={card.description}
-              id={card.id}
+              key={listing.id}
+              media={listing.media}
+              price={listing.price}
+              bedrooms={listing.bedrooms}
+              bathrooms={listing.bathrooms}
+              address={listing.address}
+              id={listing.id}
             />
           ))}
         </ScrollView>
       ) : (
-        <Text>No data available</Text>
+        <View style={styles.noResultsContainer}>
+          <MaterialIcons name="search-off" size={64} color="#cbd5e1" />
+          <Text style={styles.noResultsTitle}>No Matches Found</Text>
+          <Text style={styles.noResultsText}>
+            Try adjusting your filters to see more options
+          </Text>
+        </View>
       )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f9fa',
+  },
   scrollContainer: {
-    padding: 10, // Add padding around the scroll container
+    padding: 10,
   },
   loader: {
-    marginTop: 20, // Add some space above the spinner
+    marginTop: 20,
+  },
+  noResultsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  noResultsTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#64748b',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  noResultsText: {
+    fontSize: 16,
+    color: '#94a3b8',
+    textAlign: 'center',
   },
 });

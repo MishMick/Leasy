@@ -14,7 +14,13 @@
     "lint-staged": "lint-staged"
   },
   "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
   },
   "jest": {
     "preset": "jest-expo"
@@ -23,7 +29,7 @@
     "@expo/metro-runtime": "4.0.0",
     "@expo/vector-icons": "14.0.0",
     "@react-navigation/native": "7.0.0",
-    "axios": "1.7.8",
+    "axios": "1.7.9",
     "expo": "~52.0.0",
     "expo-font": "~13.0.1",
     "expo-linking": "~7.0.3",
@@ -44,7 +50,9 @@
     "react-native-snap-carousel": "3.9.1",
     "react-native-swiper": "1.6.0",
     "react-native-video": "5.2.1",
-    "react-native-web": "~0.19.10"
+    "react-native-web": "~0.19.10",
+    "@react-native-community/slider": "4.5.5",
+    "@react-native-async-storage/async-storage": "1.23.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
