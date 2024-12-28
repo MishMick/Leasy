@@ -9,6 +9,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read  # Allows read access to repository contents
+      issues: write   # Allows writing to issues
+      pull-requests: write  # Allows writing to pull requests
     steps:
       - uses: actions/checkout@v2
       - name: Set up Node.js
