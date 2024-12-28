@@ -167,11 +167,17 @@ export default function FilterScreen() {
       </ScrollView>
       <View style={styles.footer}>
         <View style={styles.footerButtons}>
-          <TouchableOpacity style={[styles.button, styles.resetButton]} onPress={handleResetFilters}>
+          <TouchableOpacity
+            style={[styles.button, styles.resetButton]}
+            onPress={handleResetFilters}
+          >
             <MaterialIcons name="refresh" size={20} color="#576574" />
             <Text style={styles.resetButtonText}>Reset</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, styles.applyButton]} onPress={handleApplyFilters}>
+          <TouchableOpacity
+            style={[styles.button, styles.applyButton]}
+            onPress={handleApplyFilters}
+          >
             <MaterialIcons name="check" size={20} color="#fff" />
             <Text style={styles.applyButtonText}>Apply Filters</Text>
           </TouchableOpacity>
@@ -291,5 +297,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     marginLeft: 8,
-  }
+  },
 });

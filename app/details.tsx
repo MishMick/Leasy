@@ -209,6 +209,6 @@ const styles = StyleSheet.create({
     color: '#3498db',
     fontSize: 15,
     fontWeight: '600',
-  }
+  },
 });
 export default Details;

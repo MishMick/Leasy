@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, FlatList, Image, Dimensions } from 'react-nativ
 
 const screenWidth = Dimensions.get('window').width;
 
-const Card: React.FC<Listing> = ({ media, title, description, id }) => {
+const Card: React.FC<Listing> = ({ media, price, bedrooms, bathrooms, address, id }) => {
   const renderImage = ({ item }: { item: MediaItem }) =>
     item.type === 'image' ? <Image source={{ uri: item.uri }} style={styles.image} /> : null; // TODO: maybe change to play video as well
 
@@ -19,13 +19,14 @@ const Card: React.FC<Listing> = ({ media, title, description, id }) => {
         pagingEnabled
       />
       <View style={styles.content}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.description}>{description}</Text>
+        <Text style={styles.title}>
+          ${price}/month · {bedrooms}bd {bathrooms}ba
+        </Text>
+        <Text style={styles.description}>{address}</Text>
       </View>
     </Link>
   );
 };
-
 const styles = StyleSheet.create({
   card: {
     borderRadius: 10,
