@@ -8,7 +8,7 @@ const port = 3000;
 app.use(cors()); // Allow cross-origin requests from React Native
 app.use(express.json()); // Parse JSON bodies
 
-const listings = require('./data/listings.json');
+const listings = require('../data/listings.json')
 
 // Sample API endpoint
 app.get('/api/listings', (req, res) => {
