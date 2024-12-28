@@ -40,7 +40,7 @@ jobs:
       - name: Log in to EAS
         run: |
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.EXPO_ACCESS_TOKEN }}" >> ~/.npmrc
-          eas login --username ${{ secrets.EXPO_CLI_USERNAME }} --password ${{ secrets.EXPO_CLI_PASSWORD }}
+          eas login --token ${{ secrets.EXPO_ACCESS_TOKEN }} 
 
       # Step 5: Build for iOS (using EAS Build)
       - name: Build iOS with EAS
