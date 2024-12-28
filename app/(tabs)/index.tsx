@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, ActivityIndicator, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import Card from '@/components/Card'; // adjust the path as necessary
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
@@ -10,6 +10,7 @@ const listings = require('@/data/listings.json');
 export default function HomeScreen() {
   const [data, setData] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const applyFilters = async (listings: Listing[]) => {
     const savedFilters = await AsyncStorage.getItem('savedFilters');
@@ -54,12 +55,27 @@ export default function HomeScreen() {
     }, [])
   );
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchData().then(() => setRefreshing(false));
+  }, []);
+
   return (
     <View style={styles.container}>
       {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
+        <ActivityIndicator size="large" color="#3498db" style={styles.loader} />
       ) : data.length > 0 ? (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView 
+          contentContainerStyle={styles.scrollContainer}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={["#3498db"]}
+              tintColor="#3498db"
+            />
+          }
+        >
           {data.map(listing => (
             <Card
               key={listing.id}
@@ -76,12 +92,15 @@ export default function HomeScreen() {
         <View style={styles.noResultsContainer}>
           <MaterialIcons name="search-off" size={64} color="#cbd5e1" />
           <Text style={styles.noResultsTitle}>No Matches Found</Text>
-          <Text style={styles.noResultsText}>Try adjusting your filters to see more options</Text>
+          <Text style={styles.noResultsText}>
+            Try adjusting your filters to see more options
+          </Text>
         </View>
       )}
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
