@@ -11,6 +11,8 @@ import {
 import Slider from '@react-native-community/slider';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+// Add these imports for enhanced visuals
+import { MaterialIcons } from '@expo/vector-icons';
 
 const saveFilters = async (filters: any) => {
   await AsyncStorage.setItem('savedFilters', JSON.stringify(filters));
@@ -165,16 +167,12 @@ export default function FilterScreen() {
       </ScrollView>
       <View style={styles.footer}>
         <View style={styles.footerButtons}>
-          <TouchableOpacity
-            style={[styles.button, styles.resetButton]}
-            onPress={handleResetFilters}
-          >
+          <TouchableOpacity style={[styles.button, styles.resetButton]} onPress={handleResetFilters}>
+            <MaterialIcons name="refresh" size={20} color="#576574" />
             <Text style={styles.resetButtonText}>Reset</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, styles.applyButton]}
-            onPress={handleApplyFilters}
-          >
+          <TouchableOpacity style={[styles.button, styles.applyButton]} onPress={handleApplyFilters}>
+            <MaterialIcons name="check" size={20} color="#fff" />
             <Text style={styles.applyButtonText}>Apply Filters</Text>
           </TouchableOpacity>
         </View>
@@ -183,36 +181,38 @@ export default function FilterScreen() {
   );
 }
 
+// Update the styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f8f9fa',
   },
   scrollView: {
-    padding: 16,
+    padding: 20,
   },
   card: {
     backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 20,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowRadius: 12,
+    elevation: 5,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#1a1a1a',
-    marginBottom: 16,
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#2c3e50',
+    marginBottom: 20,
+    letterSpacing: 0.5,
   },
   rangeText: {
-    fontSize: 18,
-    color: '#2196F3',
-    fontWeight: '500',
-    marginBottom: 8,
+    fontSize: 20,
+    color: '#3498db',
+    fontWeight: '600',
+    marginBottom: 12,
   },
   slider: {
     width: '100%',
@@ -222,69 +222,74 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: '#ecf0f1',
   },
   toggleLabel: {
-    fontSize: 16,
-    color: '#333',
+    fontSize: 17,
+    color: '#34495e',
+    fontWeight: '500',
   },
   inputRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 8,
   },
   inputContainer: {
-    width: '45%',
+    width: '47%',
   },
   inputLabel: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: 15,
+    color: '#7f8c8d',
     marginBottom: 8,
+    fontWeight: '500',
   },
   input: {
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 12,
+    borderRadius: 12,
+    padding: 14,
     fontSize: 16,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#f8f9fa',
+    color: '#2c3e50',
   },
   footer: {
-    padding: 16,
+    padding: 20,
     backgroundColor: '#fff',
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
+    borderTopColor: '#ecf0f1',
   },
-  applyButton: {
-    backgroundColor: '#2196F3',
-    borderRadius: 8,
+  footerButtons: {
+    flexDirection: 'row',
+    gap: 15,
+  },
+  button: {
+    flex: 1,
+    borderRadius: 12,
     padding: 16,
     alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  resetButton: {
+    backgroundColor: '#f5f6fa',
+    borderWidth: 1.5,
+    borderColor: '#dcdde1',
+  },
+  applyButton: {
+    backgroundColor: '#3498db',
+  },
+  resetButtonText: {
+    color: '#576574',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 8,
   },
   applyButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
-  },
-  footerButtons: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  button: {
-    flex: 1,
-    borderRadius: 8,
-    padding: 16,
-    alignItems: 'center',
-  },
-  resetButton: {
-    backgroundColor: '#f5f5f5',
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-  },
-  resetButtonText: {
-    color: '#666',
-    fontSize: 16,
-    fontWeight: '600',
-  },
+    marginLeft: 8,
+  }
 });
