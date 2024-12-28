@@ -1,0 +1,9 @@
+# .github/labeler.yml
+# Example of automatic labeling configuration
+docs:
+  - '**/*.md'
+frontend:
+  - '**/*.js'
+  - '**/*.ts'
+  - '**/*.jsx'
+  - '**/*.tsx'
