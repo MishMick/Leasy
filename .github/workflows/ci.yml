@@ -40,14 +40,13 @@ jobs:
       - name: Log in to EAS
         run: |
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.EXPO_ACCESS_TOKEN }}" >> ~/.npmrc
-          eas login --token ${{ secrets.EXPO_ACCESS_TOKEN }} 
-
+          EXPO_TOKEN=${{ secrets.EXPO_ACCESS_TOKEN }} eas login 
       # Step 5: Build for iOS (using EAS Build)
       - name: Build iOS with EAS
         run: |
-          eas build --platform ios --non-interactive
+          EXPO_TOKEN=${{ secrets.EXPO_ACCESS_TOKEN }} eas build --platform ios --non-interactive
 
       # Step 6: Build for Android (using EAS Build)
       - name: Build Android with EAS
         run: |
-          eas build --platform android --non-interactive
+          EXPO_TOKEN=${{ secrets.EXPO_ACCESS_TOKEN }} eas build --platform android --non-interactive
