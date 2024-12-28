@@ -1,0 +1,46 @@
+name: Expo Build
+
+on:
+  push:
+    branches:
+      - main  # Trigger build on push to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger build on pull request to the main branch
+
+jobs:
+  expo-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Use the version you need
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          npm install
+          npx expo install
+
+      # Step 4: Log in to EAS
+      - name: Log in to EAS
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.EXPO_ACCESS_TOKEN }}" >> ~/.npmrc
+          eas login --username ${{ secrets.EXPO_CLI_USERNAME }} --password ${{ secrets.EXPO_CLI_PASSWORD }}
+
+      # Step 5: Build for iOS (using EAS Build)
+      - name: Build iOS with EAS
+        run: |
+          eas build --platform ios --non-interactive
+
+      # Step 6: Build for Android (using EAS Build)
+      - name: Build Android with EAS
+        run: |
+          eas build --platform android --non-interactive
