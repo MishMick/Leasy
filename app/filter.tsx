@@ -219,9 +219,7 @@ export default function FilterScreen() {
     <View style={styles.card}>
       <Text style={styles.sectionTitle}>Included in Rent</Text>
       {Object.entries(filters.includedInRent ?? {}).map(
-        (
-          [utility, value] // Use fallback if undefined
-        ) => (
+        ([utility, value]) => (
           <View key={utility} style={styles.toggleRow}>
             <Text style={styles.toggleLabel}>
               {utility.charAt(0).toUpperCase() + utility.slice(1)}
@@ -242,6 +240,7 @@ export default function FilterScreen() {
       )}
     </View>
   );
+  
 
   const renderLeaseType = () => (
     <View style={styles.card}>
@@ -317,39 +316,44 @@ export default function FilterScreen() {
   );
 
   // Update the parking render function
+  const ParkingToggle = ({ label, value, onValueChange }) => (
+    <View style={styles.toggleRow}>
+      <Text style={styles.toggleLabel}>{label}</Text>
+      <Switch
+        value={value}
+        onValueChange={onValueChange}
+        trackColor={{ false: '#E3F2FD', true: '#90CAF9' }}
+        thumbColor={value ? '#2196F3' : '#f4f3f4'}
+      />
+    </View>
+  );
+  
   const renderParking = () => (
     <View style={styles.card}>
       <Text style={styles.sectionTitle}>Parking</Text>
-      <View style={styles.toggleRow}>
-        <Text style={styles.toggleLabel}>Assigned Parking</Text>
-        <Switch
-          value={filters.parking.assigned}
-          onValueChange={value =>
-            setFilters(prev => ({
-              ...prev,
-              parking: { ...prev.parking, assigned: value },
-            }))
-          }
-          trackColor={{ false: '#E3F2FD', true: '#90CAF9' }}
-          thumbColor={filters.parking.assigned ? '#2196F3' : '#f4f3f4'}
-        />
-      </View>
-      <View style={styles.toggleRow}>
-        <Text style={styles.toggleLabel}>Street Parking</Text>
-        <Switch
-          value={filters.parking.street}
-          onValueChange={value =>
-            setFilters(prev => ({
-              ...prev,
-              parking: { ...prev.parking, street: value },
-            }))
-          }
-          trackColor={{ false: '#E3F2FD', true: '#90CAF9' }}
-          thumbColor={filters.parking.street ? '#2196F3' : '#f4f3f4'}
-        />
-      </View>
+      <ParkingToggle
+        label="Assigned Parking"
+        value={filters.parking?.assigned || false}
+        onValueChange={(value: any) =>
+          setFilters(prev => ({
+            ...prev,
+            parking: { ...prev.parking, assigned: value },
+          }))
+        }
+      />
+      <ParkingToggle
+        label="Street Parking"
+        value={filters.parking?.street || false}
+        onValueChange={(value: any) =>
+          setFilters(prev => ({
+            ...prev,
+            parking: { ...prev.parking, street: value },
+          }))
+        }
+      />
     </View>
   );
+  
 
   // Update the return statement to include new filters
   return (
