@@ -36,17 +36,12 @@ jobs:
           npm install
           npx expo install
 
-      # Step 4: Log in to EAS
-      - name: Log in to EAS
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.EXPO_ACCESS_TOKEN }}" >> ~/.npmrc
-          EXPO_TOKEN=${{ secrets.EXPO_ACCESS_TOKEN }} eas login 
-      # Step 5: Build for iOS (using EAS Build)
+      # Step 4: Build for iOS (using EAS Build)
       - name: Build iOS with EAS
         run: |
           EXPO_TOKEN=${{ secrets.EXPO_ACCESS_TOKEN }} eas build --platform ios --non-interactive
 
-      # Step 6: Build for Android (using EAS Build)
+      # Step 5: Build for Android (using EAS Build)
       - name: Build Android with EAS
         run: |
           EXPO_TOKEN=${{ secrets.EXPO_ACCESS_TOKEN }} eas build --platform android --non-interactive
