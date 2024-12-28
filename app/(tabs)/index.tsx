@@ -23,7 +23,10 @@ export default function HomeScreen() {
         (!filters.bedrooms || listing.bedrooms >= filters.bedrooms) &&
         (!filters.bathrooms || listing.bathrooms >= filters.bathrooms) &&
         Object.entries(filters.amenities).every(
-          ([key, value]) => !value || (key in listing && (listing[key as keyof Listing] === true || listing[key as keyof Listing] === 'yes'))
+          ([key, value]) =>
+            !value ||
+            (key in listing &&
+              (listing[key as keyof Listing] === true || listing[key as keyof Listing] === 'yes'))
         )
       );
     });
@@ -73,9 +76,7 @@ export default function HomeScreen() {
         <View style={styles.noResultsContainer}>
           <MaterialIcons name="search-off" size={64} color="#cbd5e1" />
           <Text style={styles.noResultsTitle}>No Matches Found</Text>
-          <Text style={styles.noResultsText}>
-            Try adjusting your filters to see more options
-          </Text>
+          <Text style={styles.noResultsText}>Try adjusting your filters to see more options</Text>
         </View>
       )}
     </View>
