@@ -1,0 +1,15 @@
+{
+    "build": {
+      "ios": {
+        "workflow": "managed",
+        "distribution": "internal",
+        "autoIncrement": true
+      },
+      "android": {
+        "workflow": "managed",
+        "distribution": "internal",
+        "autoIncrement": true
+      }
+    }
+  }
+  

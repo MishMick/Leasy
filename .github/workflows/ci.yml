@@ -39,7 +39,7 @@ jobs:
       # Step 4: Build for iOS (using EAS Build)
       - name: Build iOS with EAS
         run: |
-          EXPO_TOKEN=${{ secrets.EXPO_ACCESS_TOKEN }} eas build --platform ios --non-interactive
+          EXPO_TOKEN=${{ secrets.EXPO_ACCESS_TOKEN }} eas build --platform ios --non-interactive --profile preview
 
       # Step 5: Build for Android (using EAS Build)
       - name: Build Android with EAS
