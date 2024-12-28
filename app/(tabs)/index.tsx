@@ -3,10 +3,11 @@ import { View, Text, ActivityIndicator, StyleSheet, ScrollView } from 'react-nat
 import Card from '@/components/Card'; // adjust the path as necessary
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const listings = require('@/data/listings.json');
 
-export default function TabTwoScreen() {
+export default function HomeScreen() {
   const [data, setData] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -22,7 +23,7 @@ export default function TabTwoScreen() {
         (!filters.bedrooms || listing.bedrooms >= filters.bedrooms) &&
         (!filters.bathrooms || listing.bathrooms >= filters.bathrooms) &&
         Object.entries(filters.amenities).every(
-          ([key, value]) => !value || listing[key] === true || listing[key] === 'yes'
+          ([key, value]) => !value || (key in listing && (listing[key as keyof Listing] === true || listing[key as keyof Listing] === 'yes'))
         )
       );
     });
@@ -51,7 +52,7 @@ export default function TabTwoScreen() {
   );
 
   return (
-    <View>
+    <View style={styles.container}>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
       ) : data.length > 0 ? (
@@ -69,16 +70,44 @@ export default function TabTwoScreen() {
           ))}
         </ScrollView>
       ) : (
-        <Text>No data available</Text>
+        <View style={styles.noResultsContainer}>
+          <MaterialIcons name="search-off" size={64} color="#cbd5e1" />
+          <Text style={styles.noResultsTitle}>No Matches Found</Text>
+          <Text style={styles.noResultsText}>
+            Try adjusting your filters to see more options
+          </Text>
+        </View>
       )}
     </View>
   );
 }
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f9fa',
+  },
   scrollContainer: {
-    padding: 10, // Add padding around the scroll container
+    padding: 10,
   },
   loader: {
-    marginTop: 20, // Add some space above the spinner
+    marginTop: 20,
+  },
+  noResultsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  noResultsTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#64748b',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  noResultsText: {
+    fontSize: 16,
+    color: '#94a3b8',
+    textAlign: 'center',
   },
 });
