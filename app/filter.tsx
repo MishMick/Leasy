@@ -274,35 +274,44 @@ export default function FilterScreen() {
   const renderLeaseDates = () => (
     <View style={styles.card}>
       <Text style={styles.sectionTitle}>Lease Dates</Text>
-      <View style={styles.dateContainer}>
-        <Text style={styles.inputLabel}>Start Date</Text>
-        <TextInput
-          style={styles.input}
-          value={filters.leaseStartDate}
-          onChangeText={value =>
-            setFilters(prev => ({
-              ...prev,
-              leaseStartDate: value,
-            }))
-          }
-          placeholder="YYYY-MM-DD"
-          placeholderTextColor="#999"
-        />
-      </View>
-      <View style={styles.dateContainer}>
-        <Text style={styles.inputLabel}>End Date</Text>
-        <TextInput
-          style={styles.input}
-          value={filters.leaseEndDate}
-          onChangeText={value =>
-            setFilters(prev => ({
-              ...prev,
-              leaseEndDate: value,
-            }))
-          }
-          placeholder="YYYY-MM-DD"
-          placeholderTextColor="#999"
-        />
+      <View style={styles.dateSection}>
+        <View style={styles.dateContainer}>
+          <Text style={styles.dateLabel}>Start Date</Text>
+          <View style={styles.dateInputContainer}>
+            <MaterialIcons name="calendar-today" size={20} color="#3498db" />
+            <TextInput
+              style={styles.dateInput}
+              value={filters.leaseStartDate}
+              onChangeText={value =>
+                setFilters(prev => ({
+                  ...prev,
+                  leaseStartDate: value,
+                }))
+              }
+              placeholder="YYYY-MM-DD"
+              placeholderTextColor="#94a3b8"
+            />
+          </View>
+        </View>
+
+        <View style={styles.dateContainer}>
+          <Text style={styles.dateLabel}>End Date</Text>
+          <View style={styles.dateInputContainer}>
+            <MaterialIcons name="calendar-today" size={20} color="#3498db" />
+            <TextInput
+              style={styles.dateInput}
+              value={filters.leaseEndDate}
+              onChangeText={value =>
+                setFilters(prev => ({
+                  ...prev,
+                  leaseEndDate: value,
+                }))
+              }
+              placeholder="YYYY-MM-DD"
+              placeholderTextColor="#94a3b8"
+            />
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -315,10 +324,10 @@ export default function FilterScreen() {
         <Text style={styles.toggleLabel}>Assigned Parking</Text>
         <Switch
           value={filters.parking.assigned}
-          onValueChange={(value) =>
-            setFilters((prev) => ({
+          onValueChange={value =>
+            setFilters(prev => ({
               ...prev,
-              parking: { ...prev.parking, assigned: value }
+              parking: { ...prev.parking, assigned: value },
             }))
           }
           trackColor={{ false: '#E3F2FD', true: '#90CAF9' }}
@@ -329,10 +338,10 @@ export default function FilterScreen() {
         <Text style={styles.toggleLabel}>Street Parking</Text>
         <Switch
           value={filters.parking.street}
-          onValueChange={(value) =>
-            setFilters((prev) => ({
+          onValueChange={value =>
+            setFilters(prev => ({
               ...prev,
-              parking: { ...prev.parking, street: value }
+              parking: { ...prev.parking, street: value },
             }))
           }
           trackColor={{ false: '#E3F2FD', true: '#90CAF9' }}
@@ -488,5 +497,33 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     marginLeft: 8,
+  },
+  dateSection: {
+    gap: 16,
+  },
+  dateContainer: {
+    flex: 1,
+  },
+  dateLabel: {
+    fontSize: 15,
+    color: '#64748b',
+    marginBottom: 8,
+    fontWeight: '500',
+  },
+  dateInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f8f9fa',
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: '#e2e8f0',
+    paddingHorizontal: 12,
+    height: 48,
+  },
+  dateInput: {
+    flex: 1,
+    marginLeft: 8,
+    fontSize: 16,
+    color: '#2c3e50',
   },
 });

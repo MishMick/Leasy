@@ -62,7 +62,6 @@ export default function HomeScreen() {
         if (!isSelected) return true;
         return listing.parking.includes(type.toLowerCase());
       });
-  
 
       // Lease dates filter
       const startDateMatch =
