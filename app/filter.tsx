@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import {
   View,
   Text,
@@ -314,10 +315,10 @@ export default function FilterScreen() {
         <Text style={styles.toggleLabel}>Assigned Parking</Text>
         <Switch
           value={filters.parking.assigned}
-          onValueChange={value =>
-            setFilters(prev => ({
+          onValueChange={(value) =>
+            setFilters((prev) => ({
               ...prev,
-              parking: { ...prev.parking, assigned: value },
+              parking: { ...prev.parking, assigned: value }
             }))
           }
           trackColor={{ false: '#E3F2FD', true: '#90CAF9' }}
@@ -328,10 +329,10 @@ export default function FilterScreen() {
         <Text style={styles.toggleLabel}>Street Parking</Text>
         <Switch
           value={filters.parking.street}
-          onValueChange={value =>
-            setFilters(prev => ({
+          onValueChange={(value) =>
+            setFilters((prev) => ({
               ...prev,
-              parking: { ...prev.parking, street: value },
+              parking: { ...prev.parking, street: value }
             }))
           }
           trackColor={{ false: '#E3F2FD', true: '#90CAF9' }}

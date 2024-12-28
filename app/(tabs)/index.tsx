@@ -58,10 +58,11 @@ export default function HomeScreen() {
       );
 
       // Parking filter
-      const parkingMatch =
-        (!filters.parking.assigned && !filters.parking.street) ||
-        (filters.parking.assigned && listing.parking.includes('assigned')) ||
-        (filters.parking.street && listing.parking.includes('street'));
+      const parkingMatch = Object.entries(filters.parking).every(([type, isSelected]) => {
+        if (!isSelected) return true;
+        return listing.parking.includes(type.toLowerCase());
+      });
+  
 
       // Lease dates filter
       const startDateMatch =

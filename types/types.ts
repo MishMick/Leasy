@@ -20,7 +20,7 @@ interface Listing {
   leaseType: string;
   leaseStartDate: string;
   leaseEndDate: string;
-  parking: string;
+  parking: string[];
   dishwasher: string;
   microwave: string;
   elevator: boolean;
