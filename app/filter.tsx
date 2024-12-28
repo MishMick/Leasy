@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, Switch, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TextInput,
+  Switch,
+  TouchableOpacity,
+} from 'react-native';
 import Slider from '@react-native-community/slider';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,11 +21,10 @@ const loadSavedFilters = async () => {
   return savedFilters ? JSON.parse(savedFilters) : null;
 };
 
-
-
 export default function FilterScreen() {
   const router = useRouter();
-  const [filters, setFilters] = useState({
+  // Add initial state as a constant
+  const initialFilters = {
     priceRange: 0,
     squareFootage: 0,
     bedrooms: 0,
@@ -27,14 +34,21 @@ export default function FilterScreen() {
       ac: false,
       dishwasher: false,
       microwave: false,
-      elevator: false
-    }
-  });
+      elevator: false,
+    },
+  };
+  const [filters, setFilters] = useState(initialFilters);
 
   // Update the apply button handler
   const handleApplyFilters = async () => {
     await saveFilters(filters);
     router.back();
+  };
+
+  // Add reset handler
+  const handleResetFilters = async () => {
+    setFilters(initialFilters);
+    await AsyncStorage.removeItem('savedFilters');
   };
 
   // Load saved filters on mount
@@ -47,7 +61,6 @@ export default function FilterScreen() {
     };
     loadFilters();
   }, []);
-
 
   const renderRangeSlider = (title, rangeKey, minLimit, maxLimit) => (
     <View style={styles.card}>
@@ -63,8 +76,8 @@ export default function FilterScreen() {
         minimumTrackTintColor="#2196F3"
         maximumTrackTintColor="#E3F2FD"
         thumbTintColor="#2196F3"
-        onValueChange={(value) =>
-          setFilters((prev) => ({
+        onValueChange={value =>
+          setFilters(prev => ({
             ...prev,
             [rangeKey]: Math.round(value),
           }))
@@ -76,20 +89,20 @@ export default function FilterScreen() {
   const renderAmenitiesToggles = () => (
     <View style={styles.card}>
       <Text style={styles.sectionTitle}>Amenities</Text>
-      {Object.keys(filters.amenities).map((amenity) => (
+      {Object.keys(filters.amenities).map(amenity => (
         <View key={amenity} style={styles.toggleRow}>
           <Text style={styles.toggleLabel}>
             {amenity.charAt(0).toUpperCase() + amenity.slice(1)}
           </Text>
           <Switch
             value={filters.amenities[amenity]}
-            onValueChange={(value) =>
+            onValueChange={value =>
               setFilters(prev => ({
                 ...prev,
                 amenities: {
                   ...prev.amenities,
-                  [amenity]: value
-                }
+                  [amenity]: value,
+                },
               }))
             }
             trackColor={{ false: '#E3F2FD', true: '#90CAF9' }}
@@ -109,8 +122,8 @@ export default function FilterScreen() {
           <TextInput
             style={styles.input}
             value={filters.bedrooms ? String(filters.bedrooms) : ''}
-            onChangeText={(value) =>
-              setFilters((prev) => ({
+            onChangeText={value =>
+              setFilters(prev => ({
                 ...prev,
                 bedrooms: value === '' ? 0 : Math.max(0, Math.min(9, parseInt(value) || 0)),
               }))
@@ -126,8 +139,8 @@ export default function FilterScreen() {
           <TextInput
             style={styles.input}
             value={filters.bathrooms ? String(filters.bathrooms) : ''}
-            onChangeText={(value) =>
-              setFilters((prev) => ({
+            onChangeText={value =>
+              setFilters(prev => ({
                 ...prev,
                 bathrooms: value === '' ? 0 : Math.max(0, Math.min(9, parseInt(value) || 0)),
               }))
@@ -151,9 +164,20 @@ export default function FilterScreen() {
         {renderAmenitiesToggles()}
       </ScrollView>
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.applyButton} onPress={handleApplyFilters}>
-          <Text style={styles.applyButtonText}>Apply Filters</Text>
-        </TouchableOpacity>
+        <View style={styles.footerButtons}>
+          <TouchableOpacity
+            style={[styles.button, styles.resetButton]}
+            onPress={handleResetFilters}
+          >
+            <Text style={styles.resetButtonText}>Reset</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.applyButton]}
+            onPress={handleApplyFilters}
+          >
+            <Text style={styles.applyButtonText}>Apply Filters</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -242,5 +266,25 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
-  }
+  },
+  footerButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  button: {
+    flex: 1,
+    borderRadius: 8,
+    padding: 16,
+    alignItems: 'center',
+  },
+  resetButton: {
+    backgroundColor: '#f5f5f5',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  resetButtonText: {
+    color: '#666',
+    fontSize: 16,
+    fontWeight: '600',
+  },
 });

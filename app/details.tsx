@@ -53,7 +53,7 @@ const Details = () => {
                 <Text style={styles.price}>${data?.price.toLocaleString()} / month</Text>
                 <Text style={styles.address}>{data?.address}</Text>
               </View>
-              
+
               <View style={styles.card}>
                 <Text style={styles.sectionTitle}>Property Details</Text>
                 <View style={styles.detailsGrid}>
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     color: '#2196F3',
     fontSize: 14,
     fontWeight: '500',
-  }
+  },
 });
 
 export default Details;
