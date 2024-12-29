@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import Card from '@/components/Card'; // adjust the path as necessary
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
@@ -18,17 +25,61 @@ export default function HomeScreen() {
 
     const filters = JSON.parse(savedFilters);
     return listings.filter(listing => {
-      return (
+      // Base filters
+      const baseFiltersMatch =
         (!filters.priceRange || listing.price <= filters.priceRange) &&
         (!filters.squareFootage || listing.squareFootage >= filters.squareFootage) &&
         (!filters.bedrooms || listing.bedrooms >= filters.bedrooms) &&
-        (!filters.bathrooms || listing.bathrooms >= filters.bathrooms) &&
-        Object.entries(filters.amenities).every(
-          ([key, value]) =>
-            !value ||
-            (key in listing &&
-              (listing[key as keyof Listing] === true || listing[key as keyof Listing] === 'yes'))
-        )
+        (!filters.bathrooms || listing.bathrooms >= filters.bathrooms);
+
+      // Amenities filters
+      const amenitiesMatch = Object.entries(filters.amenities).every(
+        ([key, value]) =>
+          !value ||
+          listing[key as keyof Listing] === true ||
+          listing[key as keyof Listing] === 'included'
+      );
+
+      // Tour options filter
+      const tourOptionsMatch = Object.entries(filters.tourOptions).every(([key, value]) => {
+        if (!value) return true;
+        const option = key === 'inPerson' ? 'in-person' : 'virtual';
+        return listing.tourOptions.includes(option);
+      });
+
+      // Included utilities filter
+      const utilitiesMatch = Object.entries(filters.includedInRent).every(
+        ([key, value]) => !value || listing.includedInRent.includes(key)
+      );
+
+      // Lease type filter
+      const leaseTypeMatch = Object.entries(filters.leaseType).every(
+        ([key, value]) => !value || listing.leaseType === key
+      );
+
+      // Parking filter
+      const parkingMatch = Object.entries(filters.parking).every(([type, isSelected]) => {
+        if (!isSelected) return true;
+        return listing.parking.includes(type.toLowerCase());
+      });
+
+      // Lease dates filter
+      const startDateMatch =
+        !filters.leaseStartDate ||
+        new Date(listing.leaseStartDate) >= new Date(filters.leaseStartDate);
+
+      const endDateMatch =
+        !filters.leaseEndDate || new Date(listing.leaseEndDate) <= new Date(filters.leaseEndDate);
+
+      return (
+        baseFiltersMatch &&
+        amenitiesMatch &&
+        tourOptionsMatch &&
+        utilitiesMatch &&
+        leaseTypeMatch &&
+        parkingMatch &&
+        startDateMatch &&
+        endDateMatch
       );
     });
   };
@@ -65,13 +116,13 @@ export default function HomeScreen() {
       {loading ? (
         <ActivityIndicator size="large" color="#3498db" style={styles.loader} />
       ) : data.length > 0 ? (
-        <ScrollView 
+        <ScrollView
           contentContainerStyle={styles.scrollContainer}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              colors={["#3498db"]}
+              colors={['#3498db']}
               tintColor="#3498db"
             />
           }
@@ -92,9 +143,7 @@ export default function HomeScreen() {
         <View style={styles.noResultsContainer}>
           <MaterialIcons name="search-off" size={64} color="#cbd5e1" />
           <Text style={styles.noResultsTitle}>No Matches Found</Text>
-          <Text style={styles.noResultsText}>
-            Try adjusting your filters to see more options
-          </Text>
+          <Text style={styles.noResultsText}>Try adjusting your filters to see more options</Text>
         </View>
       )}
     </View>

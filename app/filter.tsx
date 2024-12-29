@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import {
   View,
   Text,
@@ -38,6 +39,27 @@ export default function FilterScreen() {
       microwave: false,
       elevator: false,
     },
+    tourOptions: {
+      inPerson: false,
+      virtual: false,
+    },
+    includedInRent: {
+      water: false,
+      trash: false,
+      wifi: false,
+      gas: false,
+      electricity: false,
+    },
+    leaseType: {
+      sublease: false,
+      leaseTransfer: false,
+    },
+    parking: {
+      assigned: false,
+      street: false,
+    },
+    leaseStartDate: '',
+    leaseEndDate: '',
   };
   const [filters, setFilters] = useState(initialFilters);
 
@@ -157,6 +179,183 @@ export default function FilterScreen() {
     </View>
   );
 
+  // Add these new render functions
+  // Safeguard check in renderTourOptions to handle undefined values
+  const renderTourOptions = () => (
+    <View style={styles.card}>
+      <Text style={styles.sectionTitle}>Tour Options</Text>
+      <View style={styles.toggleRow}>
+        <Text style={styles.toggleLabel}>In-Person Tours</Text>
+        <Switch
+          value={filters.tourOptions?.inPerson ?? false} // Use fallback if undefined
+          onValueChange={value =>
+            setFilters(prev => ({
+              ...prev,
+              tourOptions: { ...prev.tourOptions, inPerson: value },
+            }))
+          }
+          trackColor={{ false: '#E3F2FD', true: '#90CAF9' }}
+          thumbColor={filters.tourOptions?.inPerson ? '#2196F3' : '#f4f3f4'}
+        />
+      </View>
+      <View style={styles.toggleRow}>
+        <Text style={styles.toggleLabel}>Virtual Tours</Text>
+        <Switch
+          value={filters.tourOptions?.virtual ?? false} // Use fallback if undefined
+          onValueChange={value =>
+            setFilters(prev => ({
+              ...prev,
+              tourOptions: { ...prev.tourOptions, virtual: value },
+            }))
+          }
+          trackColor={{ false: '#E3F2FD', true: '#90CAF9' }}
+          thumbColor={filters.tourOptions?.virtual ? '#2196F3' : '#f4f3f4'}
+        />
+      </View>
+    </View>
+  );
+
+  const renderIncludedUtilities = () => (
+    <View style={styles.card}>
+      <Text style={styles.sectionTitle}>Included in Rent</Text>
+      {Object.entries(filters.includedInRent ?? {}).map(
+        ([utility, value]) => (
+          <View key={utility} style={styles.toggleRow}>
+            <Text style={styles.toggleLabel}>
+              {utility.charAt(0).toUpperCase() + utility.slice(1)}
+            </Text>
+            <Switch
+              value={value ?? false} // Use fallback if value is undefined
+              onValueChange={newValue =>
+                setFilters(prev => ({
+                  ...prev,
+                  includedInRent: { ...prev.includedInRent, [utility]: newValue },
+                }))
+              }
+              trackColor={{ false: '#E3F2FD', true: '#90CAF9' }}
+              thumbColor={value ? '#2196F3' : '#f4f3f4'}
+            />
+          </View>
+        )
+      )}
+    </View>
+  );
+  
+
+  const renderLeaseType = () => (
+    <View style={styles.card}>
+      <Text style={styles.sectionTitle}>Lease Type</Text>
+      {Object.entries(filters.leaseType ?? {}).map(
+        (
+          [type, value] // Use fallback if undefined
+        ) => (
+          <View key={type} style={styles.toggleRow}>
+            <Text style={styles.toggleLabel}>
+              {type === 'leaseTransfer' ? 'Lease Transfer' : 'Sublease'}
+            </Text>
+            <Switch
+              value={value ?? false} // Use fallback if value is undefined
+              onValueChange={newValue =>
+                setFilters(prev => ({
+                  ...prev,
+                  leaseType: { ...prev.leaseType, [type]: newValue },
+                }))
+              }
+              trackColor={{ false: '#E3F2FD', true: '#90CAF9' }}
+              thumbColor={value ? '#2196F3' : '#f4f3f4'}
+            />
+          </View>
+        )
+      )}
+    </View>
+  );
+
+  const renderLeaseDates = () => (
+    <View style={styles.card}>
+      <Text style={styles.sectionTitle}>Lease Dates</Text>
+      <View style={styles.dateSection}>
+        <View style={styles.dateContainer}>
+          <Text style={styles.dateLabel}>Start Date</Text>
+          <View style={styles.dateInputContainer}>
+            <MaterialIcons name="calendar-today" size={20} color="#3498db" />
+            <TextInput
+              style={styles.dateInput}
+              value={filters.leaseStartDate}
+              onChangeText={value =>
+                setFilters(prev => ({
+                  ...prev,
+                  leaseStartDate: value,
+                }))
+              }
+              placeholder="YYYY-MM-DD"
+              placeholderTextColor="#94a3b8"
+            />
+          </View>
+        </View>
+
+        <View style={styles.dateContainer}>
+          <Text style={styles.dateLabel}>End Date</Text>
+          <View style={styles.dateInputContainer}>
+            <MaterialIcons name="calendar-today" size={20} color="#3498db" />
+            <TextInput
+              style={styles.dateInput}
+              value={filters.leaseEndDate}
+              onChangeText={value =>
+                setFilters(prev => ({
+                  ...prev,
+                  leaseEndDate: value,
+                }))
+              }
+              placeholder="YYYY-MM-DD"
+              placeholderTextColor="#94a3b8"
+            />
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+
+  // Update the parking render function
+  const ParkingToggle = ({ label, value, onValueChange }) => (
+    <View style={styles.toggleRow}>
+      <Text style={styles.toggleLabel}>{label}</Text>
+      <Switch
+        value={value}
+        onValueChange={onValueChange}
+        trackColor={{ false: '#E3F2FD', true: '#90CAF9' }}
+        thumbColor={value ? '#2196F3' : '#f4f3f4'}
+      />
+    </View>
+  );
+  
+  const renderParking = () => (
+    <View style={styles.card}>
+      <Text style={styles.sectionTitle}>Parking</Text>
+      <ParkingToggle
+        label="Assigned Parking"
+        value={filters.parking?.assigned || false}
+        onValueChange={(value: any) =>
+          setFilters(prev => ({
+            ...prev,
+            parking: { ...prev.parking, assigned: value },
+          }))
+        }
+      />
+      <ParkingToggle
+        label="Street Parking"
+        value={filters.parking?.street || false}
+        onValueChange={(value: any) =>
+          setFilters(prev => ({
+            ...prev,
+            parking: { ...prev.parking, street: value },
+          }))
+        }
+      />
+    </View>
+  );
+  
+
+  // Update the return statement to include new filters
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
@@ -164,6 +363,11 @@ export default function FilterScreen() {
         {renderRangeSlider('Square Footage', 'squareFootage', 0, 3000)}
         {renderBedroomsBathrooms()}
         {renderAmenitiesToggles()}
+        {renderTourOptions()}
+        {renderIncludedUtilities()}
+        {renderLeaseType()}
+        {renderParking()}
+        {renderLeaseDates()}
       </ScrollView>
       <View style={styles.footer}>
         <View style={styles.footerButtons}>
@@ -297,5 +501,33 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     marginLeft: 8,
+  },
+  dateSection: {
+    gap: 16,
+  },
+  dateContainer: {
+    flex: 1,
+  },
+  dateLabel: {
+    fontSize: 15,
+    color: '#64748b',
+    marginBottom: 8,
+    fontWeight: '500',
+  },
+  dateInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f8f9fa',
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: '#e2e8f0',
+    paddingHorizontal: 12,
+    height: 48,
+  },
+  dateInput: {
+    flex: 1,
+    marginLeft: 8,
+    fontSize: 16,
+    color: '#2c3e50',
   },
 });

@@ -1,0 +1,47 @@
+name: Expo Build
+
+on:
+  push:
+    branches:
+      - main  # Trigger build on push to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger build on pull request to the main branch
+
+jobs:
+  expo-build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read  # Access to the repository contents (read access)
+      issues: write   # If your workflow needs to manage issues
+      pull-requests: write # If your workflow needs to manage pull requests
+      actions: write  # If your workflow needs to trigger other workflows or use reusable workflows
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '23'  # Use the version you need
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli 
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          npm install
+          npx expo install
+
+      # Step 4: Build for iOS (using EAS Build)
+      - name: Build iOS with EAS
+        run: |
+          EXPO_TOKEN=${{ secrets.EXPO_ACCESS_TOKEN }} eas build --platform ios --non-interactive --profile preview
+
+      # Step 5: Build for Android (using EAS Build)
+      - name: Build Android with EAS
+        run: |
+          EXPO_TOKEN=${{ secrets.EXPO_ACCESS_TOKEN }} eas build --platform android --non-interactive

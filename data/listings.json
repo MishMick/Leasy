@@ -32,7 +32,7 @@
     "leaseType": "sublease",
     "leaseStartDate": "2024-01-01",
     "leaseEndDate": "2025-01-01",
-    "parking": "1 parking spot included",
+    "parking": ["assigned", "street"],
     "dishwasher": "included",
     "microwave": "included",
     "elevator": true
@@ -70,7 +70,7 @@
     "leaseType": "lease transfer",
     "leaseStartDate": "2024-02-01",
     "leaseEndDate": "2024-08-01",
-    "parking": "street parking available",
+    "parking": ["street"],
     "dishwasher": "not included",
     "microwave": "included",
     "elevator": false
@@ -108,7 +108,7 @@
     "leaseType": "sublease",
     "leaseStartDate": "2024-03-01",
     "leaseEndDate": "2025-03-01",
-    "parking": "no parking available",
+    "parking": ["street"],
     "dishwasher": "not included",
     "microwave": "not included",
     "elevator": false
@@ -146,7 +146,7 @@
     "leaseType": "lease transfer",
     "leaseStartDate": "2024-04-01",
     "leaseEndDate": "2026-04-01",
-    "parking": "2 garage parking spots available",
+    "parking": ["assigned"],
     "dishwasher": "included",
     "microwave": "included",
     "elevator": true
@@ -184,7 +184,7 @@
     "leaseType": "sublease",
     "leaseStartDate": "2024-05-01",
     "leaseEndDate": "2024-11-01",
-    "parking": "assigned parking spot available",
+    "parking": ["assigned", "street"],
     "dishwasher": "included",
     "microwave": "not included",
     "elevator": true
