@@ -14,6 +14,8 @@ import { Link } from 'expo-router';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import * as ImagePicker from 'expo-image-picker';
+import { Video } from 'expo-av';
+
 
 const LAUNDRY_OPTIONS = [
   { label: 'In-unit', value: 'in-unit' },
@@ -78,9 +80,11 @@ export default function CreateScreen() {
       setFormData(prevFormData => ({
         ...prevFormData,
         media: [...prevFormData.media, newMedia] as Array<{ uri: string; type: string }>,
-      }));
+      }) as typeof prevFormData);
     }
   };
+
+  const [isPlaying, setIsPlaying] = useState<{[key: string]: boolean}>({});
 
   const [formData, setFormData] = useState({
     price: '',
@@ -428,9 +432,25 @@ export default function CreateScreen() {
           <FlatList
             data={media}
             horizontal
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
               <View style={styles.mediaPreview}>
-                <Image source={{ uri: item.uri }} style={styles.mediaPreviewImage} />
+                {item.type === 'video' ? (
+                  <TouchableOpacity onPress={() => setIsPlaying({...isPlaying, [index]: !isPlaying[index]})}>
+                    <Video
+                      source={{ uri: item.uri }}
+                      style={styles.mediaPreviewVideo}
+                      useNativeControls
+                      resizeMode="cover"
+                      isLooping
+                      shouldPlay={isPlaying[index]}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <Image 
+                    source={{ uri: item.uri }} 
+                    style={styles.mediaPreviewImage} 
+                  />
+                )}
               </View>
             )}
             keyExtractor={(item, index) => index.toString()}
@@ -614,4 +634,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  mediaPreviewVideo: {
+    width: '100%',
+    height: '100%',
+  }
 });
