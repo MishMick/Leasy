@@ -62,6 +62,7 @@ export default function CreateScreen() {
   });
 
   const [media, setMedia] = useState<Array<{ uri: string; type: string }>>([]);
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
 
   const pickMedia = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -429,6 +430,10 @@ export default function CreateScreen() {
             <Text style={styles.uploadButtonText}>Add Photos/Videos</Text>
           </TouchableOpacity>
 
+          {errors.media && (
+            <Text style={styles.errorText}>{errors.media}</Text>
+          )}
+
           <FlatList
             data={media}
             horizontal
@@ -461,6 +466,15 @@ export default function CreateScreen() {
   ];
 
   const handleSubmit = () => {
+    setErrors({});
+  
+    // Check for video requirement
+    const hasVideo = media.some(item => item.type === 'video');
+    if (!hasVideo) {
+      setErrors({...errors, media: 'At least one video is required'});
+      return;
+    }
+  
     console.log(formData);
   };
 
@@ -637,5 +651,11 @@ const styles = StyleSheet.create({
   mediaPreviewVideo: {
     width: '100%',
     height: '100%',
+  },
+  errorText: {
+    color: '#FF3B30',
+    fontSize: 14,
+    marginTop: 4,
+    marginBottom: 8
   }
 });
