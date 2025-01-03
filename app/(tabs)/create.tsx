@@ -16,7 +16,6 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { Video } from 'expo-av';
 
-
 const LAUNDRY_OPTIONS = [
   { label: 'In-unit', value: 'in-unit' },
   { label: 'In-building', value: 'in-building' },
@@ -62,7 +61,7 @@ export default function CreateScreen() {
   });
 
   const [media, setMedia] = useState<Array<{ uri: string; type: string }>>([]);
-  const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const pickMedia = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -78,14 +77,17 @@ export default function CreateScreen() {
       };
       setMedia([...media, newMedia]);
 
-      setFormData(prevFormData => ({
-        ...prevFormData,
-        media: [...prevFormData.media, newMedia] as Array<{ uri: string; type: string }>,
-      }) as typeof prevFormData);
+      setFormData(
+        prevFormData =>
+          ({
+            ...prevFormData,
+            media: [...prevFormData.media, newMedia] as Array<{ uri: string; type: string }>,
+          }) as typeof prevFormData
+      );
     }
   };
 
-  const [isPlaying, setIsPlaying] = useState<{[key: string]: boolean}>({});
+  const [isPlaying, setIsPlaying] = useState<{ [key: string]: boolean }>({});
 
   const [formData, setFormData] = useState({
     price: '',
@@ -430,9 +432,7 @@ export default function CreateScreen() {
             <Text style={styles.uploadButtonText}>Add Photos/Videos</Text>
           </TouchableOpacity>
 
-          {errors.media && (
-            <Text style={styles.errorText}>{errors.media}</Text>
-          )}
+          {errors.media && <Text style={styles.errorText}>{errors.media}</Text>}
 
           <FlatList
             data={media}
@@ -440,7 +440,9 @@ export default function CreateScreen() {
             renderItem={({ item, index }) => (
               <View style={styles.mediaPreview}>
                 {item.type === 'video' ? (
-                  <TouchableOpacity onPress={() => setIsPlaying({...isPlaying, [index]: !isPlaying[index]})}>
+                  <TouchableOpacity
+                    onPress={() => setIsPlaying({ ...isPlaying, [index]: !isPlaying[index] })}
+                  >
                     <Video
                       source={{ uri: item.uri }}
                       style={styles.mediaPreviewVideo}
@@ -451,10 +453,7 @@ export default function CreateScreen() {
                     />
                   </TouchableOpacity>
                 ) : (
-                  <Image 
-                    source={{ uri: item.uri }} 
-                    style={styles.mediaPreviewImage} 
-                  />
+                  <Image source={{ uri: item.uri }} style={styles.mediaPreviewImage} />
                 )}
               </View>
             )}
@@ -467,14 +466,14 @@ export default function CreateScreen() {
 
   const handleSubmit = () => {
     setErrors({});
-  
+
     // Check for video requirement
     const hasVideo = media.some(item => item.type === 'video');
     if (!hasVideo) {
-      setErrors({...errors, media: 'At least one video is required'});
+      setErrors({ ...errors, media: 'At least one video is required' });
       return;
     }
-  
+
     console.log(formData);
   };
 
@@ -661,6 +660,6 @@ const styles = StyleSheet.create({
     color: '#FF3B30',
     fontSize: 14,
     marginTop: 4,
-    marginBottom: 8
-  }
+    marginBottom: 8,
+  },
 });
