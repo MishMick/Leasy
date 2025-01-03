@@ -90,6 +90,10 @@ export default function CreateScreen() {
     parking: false,
   });
 
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState(INCLUDED_IN_RENT_OPTIONS);
+
   const formSections = [
     {
       id: 'basic',
@@ -200,7 +204,24 @@ export default function CreateScreen() {
               style={styles.dropdown}
               dropDownContainerStyle={styles.dropdownContainer}
               placeholder="Select heat type"
-              zIndex={3000}
+              zIndex={4000}
+            />
+          </View>
+
+          <View style={[styles.formGroup, { marginTop: openDropdowns.heat ? 100 : 20 }]}>
+            <Text style={styles.label}>Included in Rent</Text>
+            <DropDownPicker
+              open={open}
+              value={value}
+              items={items}
+              style={styles.dropdown}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              theme="LIGHT"
+              multiple={true}
+              mode="BADGE"
+              badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
             />
           </View>
 
@@ -455,6 +476,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: 25,
     marginBottom: 20,
     backgroundColor: Colors.light.card,
     padding: 14,
