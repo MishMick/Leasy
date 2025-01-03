@@ -99,7 +99,7 @@ export default function CreateScreen() {
       id: 'basic',
       title: 'Basic Information',
       content: (
-        <>
+        <View style={styles.sectionContent}>
           <View style={styles.formGroup}>
             <Text style={styles.label}>Monthly Rent ($)</Text>
             <TextInput
@@ -155,15 +155,15 @@ export default function CreateScreen() {
               placeholder="Enter square footage"
             />
           </View>
-        </>
+        </View>
       ),
     },
     {
       id: 'amenities',
       title: 'Amenities',
       content: (
-        <>
-          <View style={styles.formGroup}>
+        <View style={styles.sectionContent}>
+          <View style={[styles.dropdownWrapper, { zIndex: 6000 }]}>
             <Text style={styles.label}>Laundry</Text>
             <DropDownPicker
               open={openDropdowns.laundry}
@@ -174,11 +174,11 @@ export default function CreateScreen() {
               style={styles.dropdown}
               dropDownContainerStyle={styles.dropdownContainer}
               placeholder="Select laundry type"
-              zIndex={5000}
+              zIndex={6000}
             />
           </View>
 
-          <View style={[styles.formGroup, { marginTop: openDropdowns.laundry ? 100 : 20 }]}>
+          <View style={[styles.dropdownWrapper, { zIndex: 5000 }]}>
             <Text style={styles.label}>AC Type</Text>
             <DropDownPicker
               open={openDropdowns.ac}
@@ -189,11 +189,11 @@ export default function CreateScreen() {
               style={styles.dropdown}
               dropDownContainerStyle={styles.dropdownContainer}
               placeholder="Select AC type"
-              zIndex={4000}
+              zIndex={5000}
             />
           </View>
 
-          <View style={[styles.formGroup, { marginTop: openDropdowns.ac ? 100 : 20 }]}>
+          <View style={[styles.dropdownWrapper, { zIndex: 4000 }]}>
             <Text style={styles.label}>Heat Type</Text>
             <DropDownPicker
               open={openDropdowns.heat}
@@ -208,7 +208,7 @@ export default function CreateScreen() {
             />
           </View>
 
-          <View style={[styles.formGroup, { marginTop: openDropdowns.heat ? 100 : 20 }]}>
+          <View style={[styles.dropdownWrapper, { zIndex: 3000 }]}>
             <Text style={styles.label}>Included in Rent</Text>
             <DropDownPicker
               open={open}
@@ -222,6 +222,8 @@ export default function CreateScreen() {
               multiple={true}
               mode="BADGE"
               badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
+              zIndex={3000}
+              dropDownDirection="BOTTOM"
             />
           </View>
 
@@ -232,7 +234,7 @@ export default function CreateScreen() {
               onValueChange={value => setFormData({ ...formData, elevator: value })}
             />
           </View>
-        </>
+        </View>
       ),
     },
     {
@@ -280,7 +282,7 @@ export default function CreateScreen() {
       title: 'Additional Options',
       content: (
         <>
-          <View style={styles.formGroup}>
+          <View style={[styles.dropdownWrapper, { zIndex: 2000 }]}>
             <Text style={styles.label}>Tour Options</Text>
             <DropDownPicker
               open={openDropdowns.tourOptions}
@@ -292,11 +294,11 @@ export default function CreateScreen() {
               dropDownContainerStyle={styles.dropdownContainer}
               placeholder="Select tour options"
               multiple={true}
-              zIndex={5000}
+              zIndex={2000}
             />
           </View>
 
-          <View style={[styles.formGroup, { marginTop: openDropdowns.tourOptions ? 100 : 20 }]}>
+          <View style={[styles.dropdownWrapper, { zIndex: 1000 }]}>
             <Text style={styles.label}>Parking Options</Text>
             <DropDownPicker
               open={openDropdowns.parking}
@@ -308,7 +310,7 @@ export default function CreateScreen() {
               dropDownContainerStyle={styles.dropdownContainer}
               placeholder="Select parking options"
               multiple={true}
-              zIndex={4000}
+              zIndex={1000}
             />
           </View>
         </>
@@ -513,16 +515,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.light.text.secondary,
   },
-  amenitiesContainer: {
-    gap: 24,
-  },
   dropdownWrapper: {
-    marginBottom: 0.5,
+    marginBottom: 30,
     zIndex: 5000,
+  },
+  amenitiesContainer: {
+    gap: 12,
   },
   dropdownList: {
     backgroundColor: Colors.light.card,
     borderColor: Colors.light.border,
     borderRadius: 12,
+  },
+  sectionContent: {
+    marginTop: 16,
   },
 });
