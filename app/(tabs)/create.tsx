@@ -491,9 +491,14 @@ export default function CreateScreen() {
         keyExtractor={item => item.id}
         ListHeaderComponent={<Text style={styles.title}>List Your Space</Text>}
         ListFooterComponent={
+          /* TODO: Replace with Link component
           <Link href="/" style={styles.submitButton} onPress={handleSubmit}>
             <Text style={styles.submitText}>Create Listing</Text>
           </Link>
+          */
+          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+            <Text style={styles.submitText}>Create Listing</Text>
+          </TouchableOpacity>
         }
       />
     </View>
