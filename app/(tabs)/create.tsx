@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, Switch, View, FlatList, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  TextInput,
+  Switch,
+  View,
+  FlatList,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import { Text } from '@/components/Themed';
 import Colors from '@/constants/Colors';
 import { Link } from 'expo-router';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import * as ImagePicker from 'expo-image-picker';
 
 const LAUNDRY_OPTIONS = [
   { label: 'In-unit', value: 'in-unit' },
@@ -19,11 +28,6 @@ const AC_OPTIONS = [
 const HEAT_OPTIONS = [
   { label: 'Central Heat', value: 'central heat' },
   { label: 'Window Heat', value: 'window heat' },
-];
-
-const APPLIANCE_OPTIONS = [
-  { label: 'Included', value: 'included' },
-  { label: 'Not Included', value: 'not included' },
 ];
 
 const LEASE_TYPE_OPTIONS = [
@@ -55,6 +59,29 @@ export default function CreateScreen() {
     end: false,
   });
 
+  const [media, setMedia] = useState<Array<{ uri: string; type: string }>>([]);
+
+  const pickMedia = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const newMedia: { uri: string; type: string } = {
+        uri: result.assets[0].uri,
+        type: result.assets[0].type === 'video' ? 'video' : 'image',
+      };
+      setMedia([...media, newMedia]);
+
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        media: [...prevFormData.media, newMedia] as Array<{ uri: string; type: string }>,
+      }));
+    }
+  };
+
   const [formData, setFormData] = useState({
     price: '',
     bedrooms: '',
@@ -76,6 +103,7 @@ export default function CreateScreen() {
     tourOptions: [],
     includedInRent: [],
     parking: [],
+    media: [],
   });
 
   const [openDropdowns, setOpenDropdowns] = useState({
@@ -221,7 +249,15 @@ export default function CreateScreen() {
               theme="LIGHT"
               multiple={true}
               mode="BADGE"
-              badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
+              badgeDotColors={[
+                '#e76f51',
+                '#00b4d8',
+                '#e9c46a',
+                '#e76f51',
+                '#8ac926',
+                '#00b4d8',
+                '#e9c46a',
+              ]}
               zIndex={3000}
               dropDownDirection="BOTTOM"
             />
@@ -380,6 +416,28 @@ export default function CreateScreen() {
         </>
       ),
     },
+    {
+      id: 'media',
+      title: 'Photos & Videos',
+      content: (
+        <View style={styles.mediaSection}>
+          <TouchableOpacity style={styles.uploadButton} onPress={pickMedia}>
+            <Text style={styles.uploadButtonText}>Add Photos/Videos</Text>
+          </TouchableOpacity>
+
+          <FlatList
+            data={media}
+            horizontal
+            renderItem={({ item }) => (
+              <View style={styles.mediaPreview}>
+                <Image source={{ uri: item.uri }} style={styles.mediaPreviewImage} />
+              </View>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
+      ),
+    },
   ];
 
   const handleSubmit = () => {
@@ -529,5 +587,31 @@ const styles = StyleSheet.create({
   },
   sectionContent: {
     marginTop: 16,
+  },
+  mediaSection: {
+    marginVertical: 16,
+  },
+  uploadButton: {
+    backgroundColor: Colors.light.primary,
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  uploadButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  mediaPreview: {
+    width: 100,
+    height: 100,
+    marginRight: 8,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  mediaPreviewImage: {
+    width: '100%',
+    height: '100%',
   },
 });
