@@ -218,29 +218,26 @@ export default function FilterScreen() {
   const renderIncludedUtilities = () => (
     <View style={styles.card}>
       <Text style={styles.sectionTitle}>Included in Rent</Text>
-      {Object.entries(filters.includedInRent ?? {}).map(
-        ([utility, value]) => (
-          <View key={utility} style={styles.toggleRow}>
-            <Text style={styles.toggleLabel}>
-              {utility.charAt(0).toUpperCase() + utility.slice(1)}
-            </Text>
-            <Switch
-              value={value ?? false} // Use fallback if value is undefined
-              onValueChange={newValue =>
-                setFilters(prev => ({
-                  ...prev,
-                  includedInRent: { ...prev.includedInRent, [utility]: newValue },
-                }))
-              }
-              trackColor={{ false: '#E3F2FD', true: '#90CAF9' }}
-              thumbColor={value ? '#2196F3' : '#f4f3f4'}
-            />
-          </View>
-        )
-      )}
+      {Object.entries(filters.includedInRent ?? {}).map(([utility, value]) => (
+        <View key={utility} style={styles.toggleRow}>
+          <Text style={styles.toggleLabel}>
+            {utility.charAt(0).toUpperCase() + utility.slice(1)}
+          </Text>
+          <Switch
+            value={value ?? false} // Use fallback if value is undefined
+            onValueChange={newValue =>
+              setFilters(prev => ({
+                ...prev,
+                includedInRent: { ...prev.includedInRent, [utility]: newValue },
+              }))
+            }
+            trackColor={{ false: '#E3F2FD', true: '#90CAF9' }}
+            thumbColor={value ? '#2196F3' : '#f4f3f4'}
+          />
+        </View>
+      ))}
     </View>
   );
-  
 
   const renderLeaseType = () => (
     <View style={styles.card}>
@@ -327,7 +324,7 @@ export default function FilterScreen() {
       />
     </View>
   );
-  
+
   const renderParking = () => (
     <View style={styles.card}>
       <Text style={styles.sectionTitle}>Parking</Text>
@@ -353,7 +350,6 @@ export default function FilterScreen() {
       />
     </View>
   );
-  
 
   // Update the return statement to include new filters
   return (
