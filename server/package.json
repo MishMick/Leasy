@@ -11,6 +11,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@rneui/themed": "^4.0.0-rc.8",
+    "@supabase/supabase-js": "^2.49.1",
     "cors": "2.8.5",
     "express": "4.21.1"
   }
