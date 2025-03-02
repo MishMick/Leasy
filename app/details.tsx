@@ -59,7 +59,7 @@ const Details = () => {
                 <View style={styles.detailsGrid}>
                   {renderDetailItem('Bedrooms', data?.bedrooms || 0)}
                   {renderDetailItem('Bathrooms', data?.bathrooms || 0)}
-                  {renderDetailItem('Square Feet', `${data?.squareFootage.toLocaleString()} sq ft`)}
+                  {renderDetailItem('Square Feet', `${data?.square_footage} sq ft`)}
                 </View>
               </View>
 
@@ -78,18 +78,18 @@ const Details = () => {
 
               <View style={styles.card}>
                 <Text style={styles.sectionTitle}>Lease Details</Text>
-                {renderDetailItem('Type', data?.leaseType || '')}
-                {renderDetailItem('Start Date', data?.leaseStartDate || '')}
-                {renderDetailItem('End Date', data?.leaseEndDate || '')}
-                {renderDetailItem('Security Deposit', `${data?.securityDeposit.toLocaleString()}`)}
-                {renderDetailItem('Application Fee', `${data?.applicationFees}`)}
-                {renderDetailItem('Monthly Amenity Fee', `${data?.amenityFee}`)}
+                {renderDetailItem('Type', data?.lease_type || '')}
+                {renderDetailItem('Start Date', data?.lease_start_date || '')}
+                {renderDetailItem('End Date', data?.lease_end_date || '')}
+                {renderDetailItem('Security Deposit', `${data?.security_deposit}`)}
+                {renderDetailItem('Application Fee', `${data?.application_fees}`)}
+                {renderDetailItem('Monthly Amenity Fee', `${data?.amenity_fee}`)}
               </View>
 
               <View style={styles.card}>
                 <Text style={styles.sectionTitle}>Included in Rent</Text>
                 <View style={styles.tagsContainer}>
-                  {data?.includedInRent?.map((item, index) => (
+                  {data?.included_in_rent?.map((item, index) => (
                     <View key={index} style={styles.tag}>
                       <Text style={styles.tagText}>{item}</Text>
                     </View>
@@ -100,7 +100,7 @@ const Details = () => {
               <View style={styles.card}>
                 <Text style={styles.sectionTitle}>Tour Options</Text>
                 <View style={styles.tagsContainer}>
-                  {data?.tourOptions?.map((option, index) => (
+                  {data?.tour_options?.map((option, index) => (
                     <View key={index} style={styles.tag}>
                       <Text style={styles.tagText}>{option}</Text>
                     </View>
