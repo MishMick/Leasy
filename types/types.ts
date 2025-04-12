@@ -10,10 +10,10 @@ interface Listing {
   laundry: string;
   ac: string;
   heat: string;
-  amenity_fee: number;
-  security_deposit: number;
-  application_fees: number;
-  square_footage: number;
+  amenityFee: number; // camelCase
+  securityDeposit: number; // camelCase
+  applicationFees: number; // camelCase
+  squareFootage: number; // camelCase to match database
   address: string;
   tour_options: string[];
   included_in_rent: string[];

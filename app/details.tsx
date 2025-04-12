@@ -59,7 +59,7 @@ const Details = () => {
                 <View style={styles.detailsGrid}>
                   {renderDetailItem('Bedrooms', data?.bedrooms || 0)}
                   {renderDetailItem('Bathrooms', data?.bathrooms || 0)}
-                  {renderDetailItem('Square Feet', `${data?.square_footage} sq ft`)}
+                  {renderDetailItem('Square Feet', `${data?.squareFootage} sq ft`)}
                 </View>
               </View>
 
@@ -81,9 +81,9 @@ const Details = () => {
                 {renderDetailItem('Type', data?.lease_type || '')}
                 {renderDetailItem('Start Date', data?.lease_start_date || '')}
                 {renderDetailItem('End Date', data?.lease_end_date || '')}
-                {renderDetailItem('Security Deposit', `${data?.security_deposit}`)}
-                {renderDetailItem('Application Fee', `${data?.application_fees}`)}
-                {renderDetailItem('Monthly Amenity Fee', `${data?.amenity_fee}`)}
+                {renderDetailItem('Security Deposit', `${data?.securityDeposit}`)}
+                {renderDetailItem('Application Fee', `${data?.applicationFees}`)}
+                {renderDetailItem('Monthly Amenity Fee', `${data?.amenityFee}`)}
               </View>
 
               <View style={styles.card}>
