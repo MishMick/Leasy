@@ -15,11 +15,11 @@ interface Listing {
   applicationFees: number; // camelCase
   squareFootage: number; // camelCase to match database
   address: string;
-  tour_options: string[];
-  included_in_rent: string[];
-  lease_type: string;
-  lease_start_date: string;
-  lease_end_date: string;
+  tourOptions: string[];
+  includedInRent: string[];
+  leaseType: string;
+  leaseStartDate: string;
+  leaseEndDate: string;
   parking: string[];
   dishwasher: string;
   microwave: string;

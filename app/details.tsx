@@ -78,9 +78,9 @@ const Details = () => {
 
               <View style={styles.card}>
                 <Text style={styles.sectionTitle}>Lease Details</Text>
-                {renderDetailItem('Type', data?.lease_type || '')}
-                {renderDetailItem('Start Date', data?.lease_start_date || '')}
-                {renderDetailItem('End Date', data?.lease_end_date || '')}
+                {renderDetailItem('Type', data?.leaseType || '')}
+                {renderDetailItem('Start Date', data?.leaseStartDate || '')}
+                {renderDetailItem('End Date', data?.leaseEndDate || '')}
                 {renderDetailItem('Security Deposit', `${data?.securityDeposit}`)}
                 {renderDetailItem('Application Fee', `${data?.applicationFees}`)}
                 {renderDetailItem('Monthly Amenity Fee', `${data?.amenityFee}`)}
@@ -89,7 +89,7 @@ const Details = () => {
               <View style={styles.card}>
                 <Text style={styles.sectionTitle}>Included in Rent</Text>
                 <View style={styles.tagsContainer}>
-                  {data?.included_in_rent?.map((item, index) => (
+                  {data?.includedInRent?.map((item, index) => (
                     <View key={index} style={styles.tag}>
                       <Text style={styles.tagText}>{item}</Text>
                     </View>

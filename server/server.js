@@ -37,6 +37,26 @@ const fetchListingById = async (id) => {
     console.error('Error fetching listing:', error);
     return null;
   }
+
+  // Parse string values to arrays
+  if (data) {
+    // For string fields that should be arrays
+    if (data.includedInRent && typeof data.includedInRent === 'string') {
+      data.includedInRent = data.includedInRent.split(',');
+    } else {
+      data.includedInRent = [];
+    }
+    
+    // Do the same for other array fields
+    if (data.tourOptions && typeof data.tourOptions === 'string') {
+      data.tourOptions = data.tourOptions.split(',');
+    }
+    
+    if (data.parking && typeof data.parking === 'string') {
+      data.parking = data.parking.split(',');
+    }
+  }
+
   return data;
 };
 
